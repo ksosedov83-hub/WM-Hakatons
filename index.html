@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Модель Мира — AI Хакатоны в Москве</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+--black:#09090b;--white:#fafafa;--g50:#f8f8f8;--g100:#f0f0f0;--g200:#e4e4e7;--g300:#d4d4d8;--g400:#a1a1aa;--g500:#71717a;--g600:#52525b;--g700:#3f3f46;--g800:#27272a;--g900:#18181b;
+--pink:#ec4899;--violet:#8b5cf6;--cyan:#06b6d4;
+--grad:linear-gradient(135deg,#ec4899,#8b5cf6,#06b6d4);
+--serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--sans);background:var(--white);color:var(--black);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+.container{max-width:1140px;margin:0 auto;padding:0 32px}
+@media(max-width:640px){.container{padding:0 20px}}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 0;background:rgba(250,250,250,0.82);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid var(--g200)}
+header .container{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--black)}
+.logo img{height:38px;width:38px;border-radius:8px;object-fit:cover}
+.logo-text{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:-0.02em}
+nav{display:flex;align-items:center;gap:28px}
+nav a{font-size:14px;font-weight:500;color:var(--g600);text-decoration:none;transition:color .2s}
+nav a:hover{color:var(--black)}
+.nav-cta{padding:9px 22px;background:var(--black);color:var(--white)!important;border-radius:8px;font-weight:600;font-size:13px;transition:background .2s,transform .15s}
+.nav-cta:hover{background:var(--g800);transform:translateY(-1px)}
+@media(max-width:700px){nav a:not(.nav-cta){display:none}}
+
+/* HERO */
+.hero{padding:130px 0 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(139,92,246,0.06) 0%,transparent 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+@media(max-width:800px){.hero-grid{grid-template-columns:1fr;gap:32px}}
+.hero-ey{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;font-weight:500;color:var(--g500);margin-bottom:24px;padding:6px 14px;border:1px solid var(--g200);border-radius:100px;background:var(--g50)}
+.hero-ey .dot{width:7px;height:7px;border-radius:50%;background:var(--pink);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.5vw,68px);line-height:1.08;letter-spacing:-0.03em;margin-bottom:20px}
+.hero h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-d{font-size:17px;line-height:1.7;color:var(--g600);max-width:480px;margin-bottom:36px}
+.hero-act{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn-b{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:10px;font-family:var(--sans);font-size:15px;font-weight:600;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+.btn-dk{background:var(--black);color:var(--white)}
+.btn-dk:hover{background:var(--g800);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.btn-ol{background:transparent;color:var(--black);border:1.5px solid var(--g300)}
+.btn-ol:hover{border-color:var(--black);background:var(--g50)}
+
+.hero-photo{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3}
+.hero-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-photo::after{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.08)}
+.photo-caption{position:absolute;bottom:12px;left:12px;padding:6px 12px;background:rgba(9,9,11,0.75);backdrop-filter:blur(8px);border-radius:8px;font-size:12px;font-weight:500;color:var(--white);display:flex;align-items:center;gap:6px}
+
+.hero-kpi{margin-top:56px;display:flex;gap:48px;flex-wrap:wrap}
+.kpi span:first-child{font-family:var(--serif);font-size:36px;letter-spacing:-0.03em;line-height:1;display:block}
+.kpi span:last-child{font-size:13px;color:var(--g500);margin-top:4px;display:block}
+
+/* SECTIONS */
+section{padding:96px 0}
+.stag{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:12px}
+.stit{font-family:var(--serif);font-size:clamp(32px,4.5vw,52px);font-weight:400;letter-spacing:-0.03em;line-height:1.1;margin-bottom:12px}
+.sdesc{font-size:17px;line-height:1.6;color:var(--g600);max-width:520px;margin-bottom:48px}
+
+/* EVENTS */
+.eg{display:flex;flex-direction:column;gap:1px;background:var(--g200);border-radius:16px;overflow:hidden}
+.ev{display:grid;grid-template-columns:100px 1fr auto;gap:28px;align-items:center;padding:28px 32px;background:var(--white);transition:background .2s}
+.ev:hover{background:var(--g50)}
+.ev-day{font-family:var(--serif);font-size:36px;line-height:1;letter-spacing:-0.03em;text-align:center}
+.ev-mo{font-family:var(--mono);font-size:11px;color:var(--g500);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;text-align:center}
+.ev h3{font-size:17px;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px}
+.ev-m{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.ev-m span{font-size:13px;color:var(--g500);display:flex;align-items:center;gap:4px}
+.tg{padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.02em}
+.tg-of{background:#fce7f3;color:#be185d}
+.tg-on{background:#cffafe;color:#0e7490}
+.tg-hy{background:#ede9fe;color:#6d28d9}
+.ev-c{padding:10px 24px;border-radius:8px;background:var(--black);color:var(--white);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .2s;border:none;cursor:pointer;font-family:var(--sans)}
+.ev-c:hover{background:var(--g800);transform:translateY(-1px)}
+.ev-s{opacity:.4;pointer-events:none}
+@media(max-width:700px){.ev{grid-template-columns:1fr;gap:14px}.ev-day,.ev-mo{text-align:left}.ev-c{width:100%;text-align:center;padding:12px}}
+
+/* RULES (dark) */
+.dark{background:var(--black);color:var(--white);position:relative;overflow:hidden}
+.dark::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,0.025) 59px,rgba(255,255,255,0.025) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,0.025) 59px,rgba(255,255,255,0.025) 60px);pointer-events:none}
+.dark .stag{color:var(--g400)}.dark .sdesc{color:var(--g500)}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative;z-index:1}
+@media(max-width:900px){.rg{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.rg{grid-template-columns:1fr}}
+.ru{padding:28px;border:1px solid rgba(255,255,255,0.06);border-radius:14px;background:rgba(255,255,255,0.02);transition:all .25s}
+.ru:hover{border-color:rgba(139,92,246,0.15);background:rgba(139,92,246,0.03);transform:translateY(-2px)}
+.ru-n{font-family:var(--mono);font-size:12px;color:var(--g500);margin-bottom:10px;letter-spacing:.05em}
+.ru h3{font-family:var(--serif);font-size:19px;margin-bottom:8px;font-weight:400}
+.ru p{font-size:14px;line-height:1.6;color:var(--g400)}
+
+/* DEMO */
+.demo-section{background:var(--g50);border-top:1px solid var(--g200);border-bottom:1px solid var(--g200)}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+@media(max-width:700px){.demo-grid{grid-template-columns:1fr;gap:32px}}
+.demo-visual{background:var(--black);border-radius:16px;padding:40px;position:relative;overflow:hidden;min-height:280px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.demo-visual::before{content:'';position:absolute;top:-30%;right:-20%;width:60%;height:140%;background:var(--grad);transform:rotate(-25deg);opacity:.1;filter:blur(40px)}
+.demo-icon{font-size:48px;margin-bottom:16px;position:relative;z-index:1}
+.demo-visual p{font-size:15px;color:var(--g400);text-align:center;position:relative;z-index:1;max-width:280px;line-height:1.5}
+.demo-visual .code-tag{font-family:var(--mono);font-size:12px;color:var(--violet);background:rgba(139,92,246,0.1);padding:4px 10px;border-radius:6px;margin-top:16px;position:relative;z-index:1}
+.demo-features{display:flex;flex-direction:column;gap:20px;margin-top:32px}
+.demo-feat{display:flex;gap:14px;align-items:flex-start}
+.demo-feat-ic{width:36px;height:36px;border-radius:8px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.demo-feat h4{font-size:15px;font-weight:600;margin-bottom:3px}
+.demo-feat p{font-size:14px;color:var(--g500);line-height:1.5}
+
+/* LOCATION */
+.lc{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--g200);border-radius:16px;overflow:hidden;background:var(--white)}
+@media(max-width:700px){.lc{grid-template-columns:1fr}}
+.lc-photo{position:relative;min-height:320px;overflow:hidden}
+.lc-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.lc-photo .photo-badge{position:absolute;top:12px;left:12px;padding:6px 12px;background:rgba(9,9,11,0.75);backdrop-filter:blur(8px);border-radius:8px;font-size:12px;font-weight:500;color:var(--white)}
+.lc-i{padding:40px;display:flex;flex-direction:column;justify-content:center}
+.lc-i h3{font-family:var(--serif);font-size:24px;margin-bottom:6px;letter-spacing:-0.02em}
+.lc-a{font-size:15px;color:var(--g600);line-height:1.6;margin-bottom:20px}
+.lc-fs{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.lc-f{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--g600)}
+.lc-f .ic{font-size:18px;width:24px;text-align:center}
+.lc-l{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--black);color:var(--white);border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;align-self:flex-start}
+.lc-l:hover{background:var(--g800);transform:translateY(-1px)}
+
+/* FORM */
+#register{scroll-margin-top:80px}
+.fl{max-width:520px;margin:0 auto}
+.fb{border:1px solid var(--g200);border-radius:16px;padding:40px;background:var(--white);position:relative}
+.fb::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);border-radius:16px 16px 0 0}
+.fd{margin-bottom:22px}.fd:last-of-type{margin-bottom:28px}
+.fd label{display:block;font-size:13px;font-weight:600;color:var(--g700);margin-bottom:6px}
+.fd label .rq{color:var(--pink)}
+.fd input,.fd textarea,.fd select{width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-family:var(--sans);font-size:15px;color:var(--black);background:var(--white);transition:all .2s;outline:none;-webkit-appearance:none}
+.fd select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371717a' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 01.708 0L8 10.293l5.646-5.647a.5.5 0 01.708.708l-6 6a.5.5 0 01-.708 0l-6-6a.5.5 0 010-.708z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.fd input::placeholder,.fd textarea::placeholder{color:var(--g400)}
+.fd input:focus,.fd textarea:focus,.fd select:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(139,92,246,0.1)}
+.fd input.er,.fd textarea.er{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
+.fd .em{font-size:12px;color:#ef4444;margin-top:4px;display:none}
+.fd textarea{min-height:90px;resize:vertical;line-height:1.5}
+.fd .ht{font-size:12px;color:var(--g400);margin-top:4px}
+.tw{position:relative}
+.tw::before{content:'@';position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g400);font-size:15px;pointer-events:none}
+.tw input{padding-left:28px}
+.sb{width:100%;padding:14px;background:var(--black);color:var(--white);border:none;border-radius:10px;font-family:var(--sans);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.sb:hover{background:var(--g800);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+.sb:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.sb .sp{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin:0 auto}
+.sb.ld .bt{display:none}.sb.ld .sp{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ok{display:none;text-align:center;padding:40px 24px}
+.ok.sh{display:block;animation:fu .5s ease-out}
+.ok-r{width:56px;height:56px;border-radius:50%;background:rgba(16,185,129,0.1);border:2px solid #10b981;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px}
+.ok h3{font-family:var(--serif);font-size:22px;margin-bottom:8px}
+.ok p{font-size:14px;color:var(--g500);line-height:1.6;margin-bottom:20px}
+.ok .ri{display:inline-block;padding:6px 16px;background:var(--g100);border-radius:6px;font-family:var(--mono);font-size:13px;color:var(--g700)}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* FOOTER */
+footer{padding:40px 0;border-top:1px solid var(--g200)}
+footer .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.fc{font-size:13px;color:var(--g400)}
+.flinks{display:flex;gap:20px}
+.flinks a{font-size:13px;color:var(--g500);text-decoration:none;transition:color .2s}
+.flinks a:hover{color:var(--black)}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+  <a href="#" class="logo">
+    <img src="logo.png" alt="Модель Мира">
+    <span class="logo-text">Модель Мира</span>
+  </a>
+  <nav>
+    <a href="#events">Расписание</a>
+    <a href="#rules">Правила</a>
+    <a href="#location">Локация</a>
+    <a href="#demos">Демо</a>
+    <a href="#register" class="nav-cta">Записаться →</a>
+  </nav>
+</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+<div class="container">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-ey"><span class="dot"></span>Москва · Каждую неделю</div>
+      <h1>Собираем людей, которые <em>строят с AI</em></h1>
+      <p class="hero-d">Хакатоны, где предприниматели и разработчики за один день превращают идеи в работающие прототипы. Без слайдов — только код и результат.</p>
+      <div class="hero-act">
+        <a href="#register" class="btn-b btn-dk">Записаться на хакатон</a>
+        <a href="#events" class="btn-b btn-ol">Расписание →</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="photo-hackathon.png" alt="Хакатон Модель Мира в ЗилАрт">
+      <div class="photo-caption">📍 ЗилАрт Еда · Зимний сад</div>
+    </div>
+  </div>
+  <div class="hero-kpi">
+    <div class="kpi"><span>12+</span><span>хакатонов</span></div>
+    <div class="kpi"><span>80+</span><span>участников</span></div>
+    <div class="kpi"><span>50+</span><span>проектов</span></div>
+  </div>
+</div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+<div class="container">
+  <div class="stag">// расписание</div>
+  <div class="stit">Ближайшие события</div>
+  <p class="sdesc">Офлайн в Москве, онлайн для удалённых. Выбирай формат.</p>
+  <div class="eg">
+    <div class="ev">
+      <div><div class="ev-day">22</div><div class="ev-mo">фев</div></div>
+      <div><h3>Хакатон: AI-автоматизация бизнеса</h3><div class="ev-m"><span class="tg tg-of">Офлайн</span><span>🕐 11:00–19:00</span><span>📍 ЗилАрт</span></div></div>
+      <div><a href="#register" class="ev-c">Записаться</a></div>
+    </div>
+    <div class="ev">
+      <div><div class="ev-day">26</div><div class="ev-mo">фев</div></div>
+      <div><h3>Воркшоп: Vibe Coding — приложения голосом</h3><div class="ev-m"><span class="tg tg-on">Онлайн</span><span>🕐 19:00–21:00</span><span>💻 Zoom</span></div></div>
+      <div><a href="#register" class="ev-c">Записаться</a></div>
+    </div>
+    <div class="ev">
+      <div><div class="ev-day">01</div><div class="ev-mo">мар</div></div>
+      <div><h3>Хакатон: Копируем SaaS за 1 день</h3><div class="ev-m"><span class="tg tg-hy">Гибрид</span><span>🕐 11:00–20:00</span><span>📍 ЗилАрт + Zoom</span></div></div>
+      <div><a href="#register" class="ev-c">Записаться</a></div>
+    </div>
+    <div class="ev ev-s">
+      <div><div class="ev-day">08</div><div class="ev-mo">мар</div></div>
+      <div><h3>Тема определяется</h3><div class="ev-m"><span class="tg tg-of">Офлайн</span><span>🕐 TBD</span></div></div>
+      <div><span class="ev-c" style="opacity:.3;cursor:default">Скоро</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- RULES -->
+<section id="rules" class="dark">
+<div class="container" style="position:relative;z-index:1">
+  <div class="stag">// правила</div>
+  <div class="stit" style="color:#fff">Как это работает</div>
+  <p class="sdesc">Простые правила — чтобы каждый получил максимум.</p>
+  <div class="rg">
+    <div class="ru"><div class="ru-n">01</div><h3>Приходи с идеей</h3><p>Бот, сайт, автоматизация, SaaS — что угодно. Нет идеи — найдём на месте.</p></div>
+    <div class="ru"><div class="ru-n">02</div><h3>Работай весь день</h3><p>Это не лекция. Ты реально кодишь с 11 до 19. В конце — демо рабочего прототипа.</p></div>
+    <div class="ru"><div class="ru-n">03</div><h3>Помогай другим</h3><p>Застрял — попроси помощь. Видишь что кто-то застрял — подойди.</p></div>
+    <div class="ru"><div class="ru-n">04</div><h3>Покажи результат</h3><p>3 минуты на демо. Экран, без слайдов. Работающий продукт > презентация.</p></div>
+    <div class="ru"><div class="ru-n">05</div><h3>Используй AI</h3><p>Claude, ChatGPT, Cursor, Bolt — любые инструменты. Строим, а не обсуждаем.</p></div>
+    <div class="ru"><div class="ru-n">06</div><h3>Запиши демо</h3><p>Записывай экран во время демо. Видео загружается на платформу — строим портфолио сообщества.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- DEMO -->
+<section id="demos" class="demo-section">
+<div class="container">
+  <div class="demo-grid">
+    <div>
+      <div class="stag">// демо-день</div>
+      <div class="stit">Каждый проект<br>остаётся в истории</div>
+      <p class="sdesc">В конце хакатона каждый участник записывает 3-минутное демо. Все видео собираются на платформе — никаких потерянных записей в чатах.</p>
+      <div class="demo-features">
+        <div class="demo-feat">
+          <div class="demo-feat-ic">🎥</div>
+          <div><h4>Запись экрана</h4><p>Показываешь свой проект и рассказываешь что сделал за день</p></div>
+        </div>
+        <div class="demo-feat">
+          <div class="demo-feat-ic">📤</div>
+          <div><h4>Загрузка в один клик</h4><p>Загружаешь видео через форму — оно автоматически попадает в архив</p></div>
+        </div>
+        <div class="demo-feat">
+          <div class="demo-feat-ic">🏆</div>
+          <div><h4>Портфолио сообщества</h4><p>Все демо доступны на сайте — показывай инвесторам и партнёрам</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-visual">
+      <div class="demo-icon">▶️</div>
+      <p>50+ демо-записей от участников хакатонов</p>
+      <div class="code-tag">Галерея скоро</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- LOCATION -->
+<section id="location">
+<div class="container">
+  <div class="stag">// локация</div>
+  <div class="stit">Где встречаемся</div>
+  <p class="sdesc">Офлайн — в ЗилАрте. Онлайн — через Zoom.</p>
+  <div class="lc">
+    <div class="lc-photo">
+      <img src="photo-hackathon.png" alt="ЗилАрт Еда — Зимний сад">
+      <div class="photo-badge">🌿 Зимний сад</div>
+    </div>
+    <div class="lc-i">
+      <h3>ЗилАрт Еда · Зимний сад</h3>
+      <p class="lc-a">Москва, бульвар Братьев Весниных, 2<br>ТЦ «ЗУМ», 1 этаж · Фудмолл</p>
+      <div class="lc-fs">
+        <div class="lc-f"><span class="ic">🚇</span>Метро ЗИЛ — 10 мин пешком</div>
+        <div class="lc-f"><span class="ic">☕</span>Кофе и еда прямо на месте</div>
+        <div class="lc-f"><span class="ic">📶</span>Wi-Fi, розетки</div>
+        <div class="lc-f"><span class="ic">💻</span>Онлайн через Zoom</div>
+      </div>
+      <a href="https://yandex.ru/maps/org/zilart_yeda/29536581631/" target="_blank" class="lc-l">Открыть в Яндекс Картах →</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+<div class="container">
+  <div class="fl">
+    <div style="text-align:center;margin-bottom:40px">
+      <div class="stag" style="display:flex;justify-content:center">// регистрация</div>
+      <div class="stit">Занять место</div>
+      <p style="color:var(--g500);font-size:15px">Напишем в Telegram с адресом и деталями</p>
+    </div>
+    <div class="fb">
+      <div id="fv">
+        <div class="fd"><label>Имя <span class="rq">*</span></label><input type="text" id="fn" placeholder="Как тебя зовут?" autocomplete="name"><div class="em" id="en">Укажи имя</div></div>
+        <div class="fd"><label>Telegram <span class="rq">*</span></label><div class="tw"><input type="text" id="ft" placeholder="username" autocomplete="off"></div><div class="em" id="et">Укажи Telegram</div></div>
+        <div class="fd"><label>Событие</label><select id="fe"><option value="">Выбери из списка</option><option>22 фев — Хакатон: AI-автоматизация</option><option>26 фев — Воркшоп: Vibe Coding</option><option>1 мар — Хакатон: Копируем SaaS</option><option>Любое ближайшее</option></select></div>
+        <div class="fd"><label>Идея на хакатон</label><textarea id="fi" placeholder="Что хочешь построить?"></textarea><div class="ht">Не обязательно — определишься на месте</div></div>
+        <button class="sb" id="sb" onclick="go()"><span class="bt">Записаться</span><div class="sp"></div></button>
+      </div>
+      <div class="ok" id="ov">
+        <div class="ok-r">✓</div>
+        <h3>Готово!</h3>
+        <p>Напишем в Telegram за день до события с адресом и деталями.</p>
+        <div class="ri" id="ri"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer><div class="container"><div class="fc">© 2025 Модель Мира</div><div class="flinks"><a href="https://t.me/" target="_blank">Telegram</a><a href="#events">Расписание</a><a href="#register">Регистрация</a></div></div></footer>
+
+<script>
+let r=JSON.parse(localStorage.getItem('wm_r')||'[]');
+function go(){
+const n=document.getElementById('fn').value.trim(),t=document.getElementById('ft').value.trim().replace('@',''),e=document.getElementById('fe').value,i=document.getElementById('fi').value.trim(),b=document.getElementById('sb');
+document.querySelectorAll('.er').forEach(x=>x.classList.remove('er'));document.querySelectorAll('.em').forEach(x=>x.style.display='none');
+let bad=0;
+if(!n){document.getElementById('fn').classList.add('er');document.getElementById('en').style.display='block';bad=1}
+if(!t){document.getElementById('ft').classList.add('er');document.getElementById('et').style.display='block';bad=1}
+if(bad)return;
+b.classList.add('ld');b.disabled=true;
+setTimeout(()=>{r.push({name:n,tg:'@'+t,event:e||'-',idea:i||'-',ts:new Date().toISOString()});localStorage.setItem('wm_r',JSON.stringify(r));document.getElementById('fv').style.display='none';document.getElementById('ov').classList.add('sh');document.getElementById('ri').textContent='Участник #'+r.length;b.classList.remove('ld');b.disabled=false},900)
+}
+document.querySelectorAll('input,textarea').forEach(el=>{el.addEventListener('input',()=>{el.classList.remove('er');const m=el.closest('.fd')?.querySelector('.em');if(m)m.style.display='none'})});
+document.querySelectorAll('input').forEach(el=>{el.addEventListener('keydown',e=>{if(e.key==='Enter')go()})});
+</script>
+</body>
+</html>
