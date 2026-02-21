@@ -96,6 +96,33 @@ section{padding:96px 0}
 .ru h3{font-family:var(--serif);font-size:19px;margin-bottom:8px;font-weight:400}
 .ru p{font-size:14px;line-height:1.6;color:var(--g400)}
 
+/* RULES EXTRA CATEGORIES */
+.rules-extra{margin-top:64px;position:relative;z-index:1}
+.rules-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+@media(max-width:900px){.rules-cols{grid-template-columns:1fr}}
+.rules-cat{border-radius:14px;padding:28px;border:1px solid rgba(255,255,255,0.06)}
+.rules-cat-title{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.rules-cat ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.rules-cat li{font-size:14px;line-height:1.6;display:flex;align-items:flex-start;gap:10px}
+.rules-cat li::before{flex-shrink:0;margin-top:2px;font-size:14px}
+
+.rc-check{background:rgba(16,185,129,0.04);border-color:rgba(16,185,129,0.15)}
+.rc-check .rules-cat-title{color:#34d399}
+.rc-check li::before{content:'✅'}
+.rc-check li{color:var(--g300)}
+
+.rc-notok{background:rgba(239,68,68,0.04);border-color:rgba(239,68,68,0.15)}
+.rc-notok .rules-cat-title{color:#f87171}
+.rc-notok li::before{content:'🚫'}
+.rc-notok li{color:var(--g300)}
+.rc-notok .note{font-size:12px;color:var(--g500);margin-top:2px}
+
+.rc-rec{background:rgba(139,92,246,0.04);border-color:rgba(139,92,246,0.15)}
+.rc-rec .rules-cat-title{color:var(--violet)}
+.rc-rec li::before{content:'💡'}
+.rc-rec li{color:var(--g300)}
+.rc-rec .arrow{font-family:var(--mono);color:var(--g500);font-size:12px}
+
 /* DEMO */
 .demo-section{background:var(--g50);border-top:1px solid var(--g200);border-bottom:1px solid var(--g200)}
 .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
@@ -159,6 +186,22 @@ section{padding:96px 0}
 .ok .ri{display:inline-block;padding:6px 16px;background:var(--g100);border-radius:6px;font-family:var(--mono);font-size:13px;color:var(--g700)}
 @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
+/* ANNOUNCEMENTS */
+.ann-bar{background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(236,72,153,0.06));border-bottom:1px solid var(--g200)}
+.ann-list{display:flex;flex-direction:column;gap:16px}
+.ann-item{display:flex;gap:16px;align-items:flex-start;padding:20px 24px;border:1px solid var(--g200);border-radius:12px;background:var(--white);transition:box-shadow .2s}
+.ann-item:hover{box-shadow:0 2px 12px rgba(0,0,0,0.05)}
+.ann-badge{flex-shrink:0;padding:4px 10px;border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;white-space:nowrap;margin-top:2px}
+.ann-badge-info{background:rgba(6,182,212,0.1);color:#0891b2}
+.ann-badge-warn{background:rgba(245,158,11,0.1);color:#d97706}
+.ann-badge-new{background:rgba(139,92,246,0.1);color:var(--violet)}
+.ann-content h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.ann-content p{font-size:14px;line-height:1.6;color:var(--g600)}
+.ann-date{font-size:12px;color:var(--g400);margin-top:4px;font-family:var(--mono)}
+.ann-empty{text-align:center;padding:24px;color:var(--g400);font-size:14px}
+#announcements-section{display:none}
+#announcements-section.has-items{display:block}
+
 /* FOOTER */
 footer{padding:40px 0;border-top:1px solid var(--g200)}
 footer .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
@@ -177,6 +220,7 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
     <span class="logo-text">Модель Мира</span>
   </a>
   <nav>
+    <a href="#announcements">Анонсы</a>
     <a href="#events">Расписание</a>
     <a href="#rules">Правила</a>
     <a href="#location">Локация</a>
@@ -209,6 +253,16 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
     <div class="kpi"><span>80+</span><span>участников</span></div>
     <div class="kpi"><span>50+</span><span>проектов</span></div>
   </div>
+</div>
+</section>
+
+<!-- ANNOUNCEMENTS -->
+<section id="announcements" class="ann-bar" style="scroll-margin-top:80px">
+<div class="container" id="announcements-section">
+  <div class="stag">// анонсы</div>
+  <div class="stit">Объявления</div>
+  <p class="sdesc">Новости и обновления от организаторов.</p>
+  <div class="ann-list" id="ann-list"></div>
 </div>
 </section>
 
@@ -256,6 +310,35 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
     <div class="ru"><div class="ru-n">04</div><h3>Покажи результат</h3><p>3 минуты на демо. Экран, без слайдов. Работающий продукт > презентация.</p></div>
     <div class="ru"><div class="ru-n">05</div><h3>Используй AI</h3><p>Claude, ChatGPT, Cursor, Bolt — любые инструменты. Строим, а не обсуждаем.</p></div>
     <div class="ru"><div class="ru-n">06</div><h3>Запиши демо</h3><p>Записывай экран во время демо. Видео загружается на платформу — строим портфолио сообщества.</p></div>
+  </div>
+
+  <div class="rules-extra">
+    <div class="rules-cols">
+      <div class="rules-cat rc-check">
+        <div class="rules-cat-title">Чеклист</div>
+        <ul>
+          <li>Проверь доступ к lovable.dev заранее</li>
+          <li>Идеи — в таблицу</li>
+          <li>Демо с видео — в Топик</li>
+        </ul>
+      </div>
+      <div class="rules-cat rc-notok">
+        <div class="rules-cat-title">Не ок</div>
+        <ul>
+          <li>
+            Тусить / отвлекать, не вайбкодя
+            <div class="note">Исключение: эксперт для custdev или помощь с функциями</div>
+          </li>
+        </ul>
+      </div>
+      <div class="rules-cat rc-rec">
+        <div class="rules-cat-title">Рекомендуем</div>
+        <ul>
+          <li>Говорить промпт в микрофон</li>
+          <li>Начинать с lovable.dev <span class="arrow">→ даже опытным</span><br><span class="arrow">→ потом VS Code + Opus</span></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 </section>
@@ -362,6 +445,26 @@ setTimeout(()=>{r.push({name:n,tg:'@'+t,event:e||'-',idea:i||'-',ts:new Date().t
 }
 document.querySelectorAll('input,textarea').forEach(el=>{el.addEventListener('input',()=>{el.classList.remove('er');const m=el.closest('.fd')?.querySelector('.em');if(m)m.style.display='none'})});
 document.querySelectorAll('input').forEach(el=>{el.addEventListener('keydown',e=>{if(e.key==='Enter')go()})});
+
+// ANNOUNCEMENTS
+(function(){
+const badges={info:'ann-badge-info',warn:'ann-badge-warn',new:'ann-badge-new'};
+const badgeLabels={info:'Инфо',warn:'Важно',new:'Новое'};
+fetch('announcements.json').then(r=>{if(!r.ok)throw 0;return r.json()}).then(data=>{
+const list=document.getElementById('ann-list');
+const section=document.getElementById('announcements-section');
+if(!data.announcements||!data.announcements.length)return;
+section.classList.add('has-items');
+data.announcements.forEach(a=>{
+const div=document.createElement('div');div.className='ann-item';
+const bc=badges[a.type]||badges.info;
+const bl=badgeLabels[a.type]||'Инфо';
+div.innerHTML=`<span class="ann-badge ${bc}">${bl}</span><div class="ann-content"><h4>${esc(a.title)}</h4><p>${esc(a.text)}</p><div class="ann-date">${esc(a.date||'')}</div></div>`;
+list.appendChild(div);
+});
+}).catch(()=>{});
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ — Модель Мира</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--black:#09090b;--white:#fafafa;--g50:#f8f8f8;--g100:#f0f0f0;--g200:#e4e4e7;--g300:#d4d4d8;--g400:#a1a1aa;--g500:#71717a;--g600:#52525b;--g700:#3f3f46;--g800:#27272a;--g900:#18181b;
+--pink:#ec4899;--violet:#8b5cf6;--cyan:#06b6d4;
+--grad:linear-gradient(135deg,#ec4899,#8b5cf6,#06b6d4);
+--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--sans);background:var(--g50);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* AUTH GATE */
+.auth-gate{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.auth-box{background:var(--white);border:1px solid var(--g200);border-radius:16px;padding:40px;max-width:380px;width:100%;text-align:center;position:relative}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);border-radius:16px 16px 0 0}
+.auth-box h2{font-size:20px;font-weight:700;margin-bottom:6px}
+.auth-box p{font-size:14px;color:var(--g500);margin-bottom:24px}
+.auth-box input{width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px;font-family:var(--sans);font-size:15px;margin-bottom:12px;outline:none;transition:border-color .2s}
+.auth-box input:focus{border-color:var(--violet)}
+.auth-box .err{font-size:13px;color:#ef4444;margin-bottom:12px;display:none}
+
+/* LAYOUT */
+.admin{display:none}
+.admin.active{display:block}
+.topbar{padding:14px 0;background:var(--white);border-bottom:1px solid var(--g200);position:sticky;top:0;z-index:10}
+.topbar .wrap{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
+.topbar h1 span{font-family:var(--mono);font-size:11px;padding:3px 8px;background:rgba(139,92,246,0.1);color:var(--violet);border-radius:4px}
+.topbar-actions{display:flex;gap:8px}
+
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+.main{padding:32px 0}
+
+/* BUTTONS */
+.btn{padding:10px 20px;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--black);color:var(--white)}
+.btn-primary:hover{background:var(--g800);transform:translateY(-1px)}
+.btn-secondary{background:var(--white);color:var(--black);border:1.5px solid var(--g300)}
+.btn-secondary:hover{border-color:var(--black);background:var(--g50)}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.btn-danger:hover{background:#fee2e2}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-copy{background:rgba(139,92,246,0.1);color:var(--violet);border:1px solid rgba(139,92,246,0.2)}
+.btn-copy:hover{background:rgba(139,92,246,0.15)}
+
+/* CARDS */
+.section-title{font-size:13px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin-bottom:16px}
+.ann-card{background:var(--white);border:1px solid var(--g200);border-radius:12px;padding:20px;margin-bottom:12px;display:flex;gap:16px;align-items:flex-start;transition:box-shadow .2s}
+.ann-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.05)}
+.ann-card-body{flex:1}
+.ann-card-body h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.ann-card-body p{font-size:14px;color:var(--g600);line-height:1.5;margin-bottom:6px}
+.ann-card-meta{font-size:12px;color:var(--g400);font-family:var(--mono);display:flex;gap:12px;align-items:center}
+.ann-card-actions{display:flex;gap:6px;flex-shrink:0}
+.type-badge{padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:var(--mono)}
+.type-info{background:rgba(6,182,212,0.1);color:#0891b2}
+.type-warn{background:rgba(245,158,11,0.1);color:#d97706}
+.type-new{background:rgba(139,92,246,0.1);color:var(--violet)}
+
+/* FORM */
+.add-form{background:var(--white);border:1px solid var(--g200);border-radius:12px;padding:24px;margin-bottom:32px}
+.add-form h3{font-size:15px;font-weight:600;margin-bottom:16px}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:600;color:var(--g700);margin-bottom:5px}
+.form-row input,.form-row textarea,.form-row select{width:100%;padding:10px 12px;border:1.5px solid var(--g200);border-radius:8px;font-family:var(--sans);font-size:14px;outline:none;transition:border-color .2s}
+.form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:var(--violet)}
+.form-row textarea{min-height:70px;resize:vertical;line-height:1.5}
+.form-row select{cursor:pointer}
+.form-actions{display:flex;gap:8px;margin-top:18px}
+
+/* JSON EXPORT */
+.export-box{background:var(--g900);border-radius:12px;padding:20px;margin-top:24px;position:relative}
+.export-box pre{font-family:var(--mono);font-size:12px;color:var(--g300);line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto}
+.export-actions{position:absolute;top:12px;right:12px;display:flex;gap:6px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 20px;background:var(--black);color:var(--white);border-radius:8px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}
+.toast.show{opacity:1}
+
+.empty-state{text-align:center;padding:40px;color:var(--g400);font-size:14px;background:var(--white);border:1px dashed var(--g200);border-radius:12px}
+
+/* WORKFLOW HINT */
+.hint{background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.15);border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:13px;line-height:1.6;color:var(--g600)}
+.hint strong{color:var(--black)}
+.hint code{font-family:var(--mono);font-size:12px;background:var(--g100);padding:2px 6px;border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div class="auth-gate" id="auth-gate">
+  <div class="auth-box">
+    <h2>Админ-панель</h2>
+    <p>Модель Мира — управление анонсами</p>
+    <input type="password" id="auth-pass" placeholder="Пароль" autofocus>
+    <div class="err" id="auth-err">Неверный пароль</div>
+    <button class="btn btn-primary" style="width:100%" onclick="tryAuth()">Войти</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin" id="admin-panel">
+  <div class="topbar">
+    <div class="wrap">
+      <h1>Модель Мира <span>admin</span></h1>
+      <div class="topbar-actions">
+        <button class="btn btn-secondary btn-sm" onclick="window.open('index.html','_blank')">Открыть сайт</button>
+        <button class="btn btn-secondary btn-sm" onclick="logout()">Выйти</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="wrap">
+
+      <div class="hint">
+        <strong>Как это работает:</strong> Добавляй анонсы здесь. Нажми «Скопировать JSON» и обнови файл <code>announcements.json</code> в репозитории. После деплоя анонсы появятся на сайте. В будущем агент сможет обновлять файл автоматически.
+      </div>
+
+      <!-- ADD FORM -->
+      <div class="add-form">
+        <h3>Новый анонс</h3>
+        <div class="form-row">
+          <label>Тип</label>
+          <select id="a-type">
+            <option value="new">Новое</option>
+            <option value="info">Инфо</option>
+            <option value="warn">Важно</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Заголовок</label>
+          <input type="text" id="a-title" placeholder="Краткий заголовок анонса">
+        </div>
+        <div class="form-row">
+          <label>Текст</label>
+          <textarea id="a-text" placeholder="Подробности..."></textarea>
+        </div>
+        <div class="form-row">
+          <label>Дата</label>
+          <input type="date" id="a-date">
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="addAnn()">Добавить</button>
+          <button class="btn btn-secondary" onclick="clearForm()">Очистить</button>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="section-title">Текущие анонсы</div>
+      <div id="ann-list"></div>
+
+      <!-- EXPORT -->
+      <div class="section-title" style="margin-top:32px">Экспорт JSON</div>
+      <div class="export-box">
+        <div class="export-actions">
+          <button class="btn btn-copy btn-sm" onclick="copyJSON()">Скопировать JSON</button>
+          <button class="btn btn-secondary btn-sm" onclick="downloadJSON()">Скачать файл</button>
+        </div>
+        <pre id="json-preview"></pre>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PASS_HASH='wm2025admin';
+let announcements=[];
+
+// AUTH
+function tryAuth(){
+  const p=document.getElementById('auth-pass').value;
+  if(p===PASS_HASH){
+    sessionStorage.setItem('wm_auth','1');
+    showAdmin();
+  } else {
+    document.getElementById('auth-err').style.display='block';
+  }
+}
+document.getElementById('auth-pass').addEventListener('keydown',e=>{if(e.key==='Enter')tryAuth()});
+
+function logout(){
+  sessionStorage.removeItem('wm_auth');
+  document.getElementById('admin-panel').classList.remove('active');
+  document.getElementById('auth-gate').style.display='flex';
+  document.getElementById('auth-pass').value='';
+  document.getElementById('auth-err').style.display='none';
+}
+
+function showAdmin(){
+  document.getElementById('auth-gate').style.display='none';
+  document.getElementById('admin-panel').classList.add('active');
+  loadAnnouncements();
+}
+
+// LOAD
+function loadAnnouncements(){
+  const saved=localStorage.getItem('wm_announcements');
+  if(saved){
+    try{announcements=JSON.parse(saved)}catch(e){announcements=[]}
+  } else {
+    fetch('announcements.json')
+      .then(r=>r.ok?r.json():Promise.reject())
+      .then(data=>{announcements=data.announcements||[];save();render()})
+      .catch(()=>{announcements=[];render()});
+    return;
+  }
+  render();
+}
+
+// SAVE
+function save(){
+  localStorage.setItem('wm_announcements',JSON.stringify(announcements));
+  render();
+}
+
+// RENDER
+function render(){
+  const list=document.getElementById('ann-list');
+  const preview=document.getElementById('json-preview');
+
+  if(!announcements.length){
+    list.innerHTML='<div class="empty-state">Нет анонсов. Добавьте первый выше.</div>';
+  } else {
+    const typeClasses={info:'type-info',warn:'type-warn',new:'type-new'};
+    const typeLabels={info:'Инфо',warn:'Важно',new:'Новое'};
+    list.innerHTML=announcements.map((a,i)=>`
+      <div class="ann-card">
+        <div class="ann-card-body">
+          <h4>${esc(a.title)}</h4>
+          <p>${esc(a.text)}</p>
+          <div class="ann-card-meta">
+            <span class="type-badge ${typeClasses[a.type]||'type-info'}">${typeLabels[a.type]||'Инфо'}</span>
+            <span>${esc(a.date||'')}</span>
+          </div>
+        </div>
+        <div class="ann-card-actions">
+          <button class="btn btn-danger btn-sm" onclick="removeAnn(${i})">Удалить</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const json=JSON.stringify({announcements},null,2);
+  preview.textContent=json;
+}
+
+// ADD
+function addAnn(){
+  const type=document.getElementById('a-type').value;
+  const title=document.getElementById('a-title').value.trim();
+  const text=document.getElementById('a-text').value.trim();
+  const date=document.getElementById('a-date').value;
+  if(!title){toast('Укажите заголовок');return}
+  announcements.unshift({type,title,text,date});
+  save();
+  clearForm();
+  toast('Анонс добавлен');
+}
+
+// REMOVE
+function removeAnn(i){
+  announcements.splice(i,1);
+  save();
+  toast('Анонс удалён');
+}
+
+// CLEAR
+function clearForm(){
+  document.getElementById('a-title').value='';
+  document.getElementById('a-text').value='';
+  document.getElementById('a-date').value='';
+  document.getElementById('a-type').value='new';
+}
+
+// EXPORT
+function copyJSON(){
+  const json=JSON.stringify({announcements},null,2);
+  navigator.clipboard.writeText(json).then(()=>toast('JSON скопирован в буфер')).catch(()=>toast('Ошибка копирования'));
+}
+function downloadJSON(){
+  const json=JSON.stringify({announcements},null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='announcements.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Файл скачан');
+}
+
+// TOAST
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// ESCAPE
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+// INIT
+if(sessionStorage.getItem('wm_auth')==='1')showAdmin();
+document.getElementById('a-date').value=new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
