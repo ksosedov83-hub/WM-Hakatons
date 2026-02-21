@@ -151,8 +151,14 @@ section{padding:96px 0}
 .sb .sp{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin:0 auto}
 .sb.ld .bt{display:none}.sb.ld .sp{display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ok{display:none;text-align:center;padding:40px 24px}
-.ok.sh{display:block;animation:fu .5s ease-out}
+.ok-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(9,9,11,0.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center}
+.ok-overlay.sh{display:flex;animation:fo .3s ease-out}
+@keyframes fo{from{opacity:0}to{opacity:1}}
+.ok{position:relative;background:var(--white);border-radius:16px;text-align:center;padding:40px 24px;min-width:340px;max-width:520px;width:90vw;max-height:80vh;overflow:auto;resize:both;box-shadow:0 24px 64px rgba(0,0,0,0.2);animation:fu .5s ease-out;transition:all .3s ease}
+.ok.maximized{width:100vw!important;max-width:100vw!important;height:100vh!important;max-height:100vh!important;border-radius:0;margin:0;resize:none}
+.ok-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;position:absolute;top:12px;right:12px;z-index:1}
+.ok-btn{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--g200);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--g600);transition:all .2s}
+.ok-btn:hover{border-color:var(--g400);background:var(--g50);color:var(--black)}
 .ok-r{width:56px;height:56px;border-radius:50%;background:rgba(16,185,129,0.1);border:2px solid #10b981;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px}
 .ok h3{font-family:var(--serif);font-size:22px;margin-bottom:8px}
 .ok p{font-size:14px;color:var(--g500);line-height:1.6;margin-bottom:20px}
@@ -335,21 +341,33 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
         <div class="fd"><label>Идея на хакатон</label><textarea id="fi" placeholder="Что хочешь построить?"></textarea><div class="ht">Не обязательно — определишься на месте</div></div>
         <button class="sb" id="sb" onclick="go()"><span class="bt">Записаться</span><div class="sp"></div></button>
       </div>
-      <div class="ok" id="ov">
-        <div class="ok-r">✓</div>
-        <h3>Готово!</h3>
-        <p>Напишем в Telegram за день до события с адресом и деталями.</p>
-        <div class="ri" id="ri"></div>
-      </div>
     </div>
   </div>
 </div>
 </section>
 
+<div class="ok-overlay" id="ok-overlay">
+  <div class="ok" id="ok-dialog">
+    <div class="ok-bar">
+      <button class="ok-btn" id="ok-max" title="Развернуть">&#x26F6;</button>
+      <button class="ok-btn" id="ok-close" title="Закрыть">&times;</button>
+    </div>
+    <div class="ok-r">&#10003;</div>
+    <h3>Готово!</h3>
+    <p>Напишем в Telegram за день до события с адресом и деталями.</p>
+    <div class="ri" id="ri"></div>
+  </div>
+</div>
+
 <footer><div class="container"><div class="fc">© 2025 Модель Мира</div><div class="flinks"><a href="https://t.me/" target="_blank">Telegram</a><a href="#events">Расписание</a><a href="#register">Регистрация</a></div></div></footer>
 
 <script>
 let r=JSON.parse(localStorage.getItem('wm_r')||'[]');
+const overlay=document.getElementById('ok-overlay');
+const dialog=document.getElementById('ok-dialog');
+const maxBtn=document.getElementById('ok-max');
+const closeBtn=document.getElementById('ok-close');
+
 function go(){
 const n=document.getElementById('fn').value.trim(),t=document.getElementById('ft').value.trim().replace('@',''),e=document.getElementById('fe').value,i=document.getElementById('fi').value.trim(),b=document.getElementById('sb');
 document.querySelectorAll('.er').forEach(x=>x.classList.remove('er'));document.querySelectorAll('.em').forEach(x=>x.style.display='none');
@@ -358,8 +376,25 @@ if(!n){document.getElementById('fn').classList.add('er');document.getElementById
 if(!t){document.getElementById('ft').classList.add('er');document.getElementById('et').style.display='block';bad=1}
 if(bad)return;
 b.classList.add('ld');b.disabled=true;
-setTimeout(()=>{r.push({name:n,tg:'@'+t,event:e||'-',idea:i||'-',ts:new Date().toISOString()});localStorage.setItem('wm_r',JSON.stringify(r));document.getElementById('fv').style.display='none';document.getElementById('ov').classList.add('sh');document.getElementById('ri').textContent='Участник #'+r.length;b.classList.remove('ld');b.disabled=false},900)
+setTimeout(()=>{r.push({name:n,tg:'@'+t,event:e||'-',idea:i||'-',ts:new Date().toISOString()});localStorage.setItem('wm_r',JSON.stringify(r));document.getElementById('ri').textContent='Участник #'+r.length;overlay.classList.add('sh');b.classList.remove('ld');b.disabled=false},900)
 }
+
+maxBtn.addEventListener('click',()=>{
+  dialog.classList.toggle('maximized');
+  maxBtn.innerHTML=dialog.classList.contains('maximized')?'&#x29C9;':'&#x26F6;';
+  maxBtn.title=dialog.classList.contains('maximized')?'Свернуть':'Развернуть';
+});
+
+closeBtn.addEventListener('click',()=>{
+  overlay.classList.remove('sh');
+  dialog.classList.remove('maximized');
+  maxBtn.innerHTML='&#x26F6;';
+});
+
+overlay.addEventListener('click',(e)=>{
+  if(e.target===overlay){overlay.classList.remove('sh');dialog.classList.remove('maximized');maxBtn.innerHTML='&#x26F6;';}
+});
+
 document.querySelectorAll('input,textarea').forEach(el=>{el.addEventListener('input',()=>{el.classList.remove('er');const m=el.closest('.fd')?.querySelector('.em');if(m)m.style.display='none'})});
 document.querySelectorAll('input').forEach(el=>{el.addEventListener('keydown',e=>{if(e.key==='Enter')go()})});
 </script>
