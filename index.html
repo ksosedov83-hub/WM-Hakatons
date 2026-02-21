@@ -87,11 +87,22 @@ section{padding:96px 0}
 .dark{background:var(--black);color:var(--white);position:relative;overflow:hidden}
 .dark::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,0.025) 59px,rgba(255,255,255,0.025) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,0.025) 59px,rgba(255,255,255,0.025) 60px);pointer-events:none}
 .dark .stag{color:var(--g400)}.dark .sdesc{color:var(--g500)}
+.rules-block{margin-bottom:32px}
+.rules-block-header{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.rules-block-header--ok{color:#a3e635;background:rgba(163,230,53,0.08);border:1px solid rgba(163,230,53,0.2)}
+.rules-block-header--notok{color:#f87171;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2)}
+.rules-block-header--rec{color:#60a5fa;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.2)}
 .rg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative;z-index:1}
+.rg--list{grid-template-columns:1fr}
+@media(min-width:601px){.rg--list{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}}
 @media(max-width:900px){.rg{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.rg{grid-template-columns:1fr}}
 .ru{padding:28px;border:1px solid rgba(255,255,255,0.06);border-radius:14px;background:rgba(255,255,255,0.02);transition:all .25s}
 .ru:hover{border-color:rgba(139,92,246,0.15);background:rgba(139,92,246,0.03);transform:translateY(-2px)}
+.ru--notok{border-color:rgba(248,113,113,0.15);background:rgba(248,113,113,0.03)}
+.ru--notok:hover{border-color:rgba(248,113,113,0.3);background:rgba(248,113,113,0.06)}
+.ru--rec{border-color:rgba(96,165,250,0.1);background:rgba(96,165,250,0.02)}
+.ru--rec:hover{border-color:rgba(96,165,250,0.25);background:rgba(96,165,250,0.05)}
 .ru-n{font-family:var(--mono);font-size:12px;color:var(--g500);margin-bottom:10px;letter-spacing:.05em}
 .ru h3{font-family:var(--serif);font-size:19px;margin-bottom:8px;font-weight:400}
 .ru p{font-size:14px;line-height:1.6;color:var(--g400)}
@@ -249,13 +260,31 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
   <div class="stag">// правила</div>
   <div class="stit" style="color:#fff">Как это работает</div>
   <p class="sdesc">Простые правила — чтобы каждый получил максимум.</p>
-  <div class="rg">
-    <div class="ru"><div class="ru-n">01</div><h3>Приходи с идеей</h3><p>Бот, сайт, автоматизация, SaaS — что угодно. Нет идеи — найдём на месте.</p></div>
-    <div class="ru"><div class="ru-n">02</div><h3>Работай весь день</h3><p>Это не лекция. Ты реально кодишь с 11 до 19. В конце — демо рабочего прототипа.</p></div>
-    <div class="ru"><div class="ru-n">03</div><h3>Помогай другим</h3><p>Застрял — попроси помощь. Видишь что кто-то застрял — подойди.</p></div>
-    <div class="ru"><div class="ru-n">04</div><h3>Покажи результат</h3><p>3 минуты на демо. Экран, без слайдов. Работающий продукт > презентация.</p></div>
-    <div class="ru"><div class="ru-n">05</div><h3>Используй AI</h3><p>Claude, ChatGPT, Cursor, Bolt — любые инструменты. Строим, а не обсуждаем.</p></div>
-    <div class="ru"><div class="ru-n">06</div><h3>Запиши демо</h3><p>Записывай экран во время демо. Видео загружается на платформу — строим портфолио сообщества.</p></div>
+  <!-- Правила -->
+  <div class="rules-block">
+    <div class="rules-block-header rules-block-header--ok">Правила</div>
+    <div class="rg rg--list">
+      <div class="ru"><div class="ru-n">01</div><h3>Проверь доступ к lovable.dev заранее</h3><p>Зарегистрируйся и убедись, что всё работает до начала хакатона.</p></div>
+      <div class="ru"><div class="ru-n">02</div><h3>Идеи — в таблицу</h3><p>Запиши свою идею в общую таблицу, чтобы все видели над чем ты работаешь.</p></div>
+      <div class="ru"><div class="ru-n">03</div><h3>Демо с видео — в Топик</h3><p>Запиши демо и выложи видео в топик чата. Каждый проект остаётся в истории.</p></div>
+    </div>
+  </div>
+
+  <!-- Не ок -->
+  <div class="rules-block">
+    <div class="rules-block-header rules-block-header--notok">Не ок</div>
+    <div class="rg rg--list">
+      <div class="ru ru--notok"><div class="ru-n">⛔</div><h3>Тусить / отвлекать, не вайбкодя</h3><p>Исключение — эксперт для custdev или помощь с конкретной функцией.</p></div>
+    </div>
+  </div>
+
+  <!-- Рекомендуем -->
+  <div class="rules-block">
+    <div class="rules-block-header rules-block-header--rec">Рекомендуем</div>
+    <div class="rg rg--list">
+      <div class="ru ru--rec"><div class="ru-n">🎙</div><h3>Говорить промпт в микрофон</h3><p>Голосовой ввод ускоряет работу — попробуй диктовать вместо набора.</p></div>
+      <div class="ru ru--rec"><div class="ru-n">🚀</div><h3>Начинать с lovable.dev</h3><p>Даже опытным разработчикам. Потом переходи в VS Code + Opus для тонкой настройки.</p></div>
+    </div>
   </div>
 </div>
 </section>
