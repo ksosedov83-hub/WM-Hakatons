@@ -273,8 +273,8 @@ section{padding:96px 0}
 .faq-a-inner{padding:0 24px 18px;font-size:14px;line-height:1.7;color:var(--g600)}
 
 /* BACK TO TOP */
-.back-to-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--black);color:var(--white);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(20px);transition:all .3s;z-index:90;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
-.back-to-top.visible{opacity:1;transform:translateY(0)}
+.back-to-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--black);color:var(--white);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(20px);transition:all .3s;z-index:90;box-shadow:0 4px 16px rgba(0,0,0,0.15);pointer-events:none}
+.back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:auto}
 .back-to-top:hover{background:var(--g800);transform:translateY(-2px)}
 
 /* FOOTER */
@@ -501,7 +501,7 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
           </div>
           <button class="sb" id="demoSubmit" onclick="submitDemo()">
             <span class="bt">Отправить демо</span>
-            <div class="sp"></div>
+            <span class="sp"></span>
           </button>
         </div>
         <div class="ok" id="demoOk">
@@ -602,7 +602,7 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
         <div class="fd"><label>Событие</label><select id="fe"><option value="">Выбери из списка</option><option>1 мар — Хакатон: Копируем SaaS</option><option>8 мар — Хакатон: AI-агенты</option><option>12 мар — Воркшоп: Vibe Coding</option><option>Любое ближайшее</option></select></div>
         <div class="fd"><label>Опыт</label><select id="fexp"><option value="">Какой у тебя опыт?</option><option>Совсем новичок — никогда не кодил</option><option>Использую ChatGPT / no-code</option><option>Немного программирую</option><option>Опытный разработчик</option></select></div>
         <div class="fd"><label>Идея на хакатон</label><textarea id="fi" placeholder="Что хочешь построить?"></textarea><div class="ht">Не обязательно — определишься на месте</div></div>
-        <button class="sb" id="sb" onclick="submitRegistration()"><span class="bt">Записаться</span><div class="sp"></div></button>
+        <button class="sb" id="sb" onclick="submitRegistration()"><span class="bt">Записаться</span><span class="sp"></span></button>
       </div>
       <div class="ok" id="ov">
         <div class="ok-r">&#10003;</div>
@@ -861,6 +861,8 @@ var recordedBlob = null;
 var recStartTime = 0;
 var recInterval = null;
 
+var prevPreviewUrl = null;
+
 document.getElementById('recStart').addEventListener('click', function() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
     showToast('Браузер не поддерживает запись экрана', 'error');
@@ -871,52 +873,74 @@ document.getElementById('recStart').addEventListener('click', function() {
     video: { mediaSource: 'screen' },
     audio: true
   }).then(function(stream) {
-    recordedChunks = [];
-    recordedBlob = null;
+    try {
+      recordedChunks = [];
+      recordedBlob = null;
 
-    mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      // Очистка предыдущего превью
+      if (prevPreviewUrl) {
+        URL.revokeObjectURL(prevPreviewUrl);
+        prevPreviewUrl = null;
+      }
 
-    mediaRecorder.ondataavailable = function(e) {
-      if (e.data.size > 0) recordedChunks.push(e.data);
-    };
+      // Определяем поддерживаемый mimeType
+      var mimeType = 'video/webm';
+      if (typeof MediaRecorder !== 'undefined' && !MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = '';
+      }
+      mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType: mimeType } : undefined);
 
-    mediaRecorder.onstop = function() {
-      recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
-      var url = URL.createObjectURL(recordedBlob);
-      var video = document.getElementById('recVideo');
-      video.src = url;
-      document.getElementById('recPreview').style.display = 'block';
-      document.getElementById('recDownload').disabled = false;
-      document.getElementById('recorderCard').classList.remove('recording');
-      clearInterval(recInterval);
+      var recMimeType = mediaRecorder.mimeType || 'video/webm';
 
-      // Остановить все треки
+      mediaRecorder.ondataavailable = function(e) {
+        if (e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = function() {
+        recordedBlob = new Blob(recordedChunks, { type: recMimeType });
+        prevPreviewUrl = URL.createObjectURL(recordedBlob);
+        var video = document.getElementById('recVideo');
+        video.src = prevPreviewUrl;
+        document.getElementById('recPreview').style.display = 'block';
+        document.getElementById('recDownload').disabled = false;
+        document.getElementById('recorderCard').classList.remove('recording');
+        clearInterval(recInterval);
+
+        // Остановить все треки
+        stream.getTracks().forEach(function(track) { track.stop(); });
+      };
+
+      mediaRecorder.start();
+
+      document.getElementById('recStart').disabled = true;
+      document.getElementById('recStop').disabled = false;
+      document.getElementById('recorderCard').classList.add('recording');
+
+      // Сброс и старт таймера
+      recStartTime = Date.now();
+      var timerEl = document.getElementById('recTimer');
+      timerEl.textContent = '00:00';
+      timerEl.classList.add('active');
+      if (recInterval) clearInterval(recInterval);
+      recInterval = setInterval(function() {
+        var elapsed = Math.floor((Date.now() - recStartTime) / 1000);
+        var mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        var ss = String(elapsed % 60).padStart(2, '0');
+        timerEl.textContent = mm + ':' + ss;
+      }, 1000);
+
+      showToast('Запись началась', 'success');
+
+      // Если пользователь останавливает шаринг через UI браузера
+      stream.getVideoTracks()[0].onended = function() {
+        if (mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      };
+    } catch (err) {
       stream.getTracks().forEach(function(track) { track.stop(); });
-    };
-
-    mediaRecorder.start();
-
-    document.getElementById('recStart').disabled = true;
-    document.getElementById('recStop').disabled = false;
-    document.getElementById('recorderCard').classList.add('recording');
-
-    // Таймер
-    recStartTime = Date.now();
-    var timerEl = document.getElementById('recTimer');
-    timerEl.classList.add('active');
-    recInterval = setInterval(function() {
-      var elapsed = Math.floor((Date.now() - recStartTime) / 1000);
-      var mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
-      var ss = String(elapsed % 60).padStart(2, '0');
-      timerEl.textContent = mm + ':' + ss;
-    }, 1000);
-
-    showToast('Запись началась', 'success');
-
-    // Если пользователь останавливает шаринг через UI браузера
-    stream.getVideoTracks()[0].onended = function() {
-      if (mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-    };
+      showToast('Ошибка записи: ' + err.message, 'error');
+      document.getElementById('recStart').disabled = false;
+      document.getElementById('recStop').disabled = true;
+    }
   }).catch(function(err) {
     if (err.name !== 'NotAllowedError') {
       showToast('Ошибка записи: ' + err.message, 'error');
@@ -934,10 +958,13 @@ document.getElementById('recStop').addEventListener('click', function() {
 
 document.getElementById('recDownload').addEventListener('click', function() {
   if (!recordedBlob) return;
+  var dlUrl = URL.createObjectURL(recordedBlob);
+  var ext = recordedBlob.type.includes('mp4') ? 'mp4' : 'webm';
   var a = document.createElement('a');
-  a.href = URL.createObjectURL(recordedBlob);
-  a.download = 'demo-' + new Date().toISOString().slice(0, 10) + '.webm';
+  a.href = dlUrl;
+  a.download = 'demo-' + new Date().toISOString().slice(0, 10) + '.' + ext;
   a.click();
+  setTimeout(function() { URL.revokeObjectURL(dlUrl); }, 1000);
   showToast('Видео скачано! Загрузи на YouTube и вставь ссылку', 'info');
 });
 
