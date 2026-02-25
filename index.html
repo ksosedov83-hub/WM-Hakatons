@@ -508,6 +508,7 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
           <div class="ok-r">&#10003;</div>
           <h3>Демо отправлено!</h3>
           <p>Видео появится в галерее. Спасибо за участие!</p>
+          <button class="sb" onclick="resetDemoForm()" style="margin-top:16px"><span class="bt">Отправить ещё</span></button>
         </div>
       </div>
     </div>
@@ -609,6 +610,7 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
         <h3>Готово!</h3>
         <p>Данные записаны в таблицу. Напишем в Telegram за день до события с адресом и деталями.</p>
         <div class="ri" id="ri"></div>
+        <button class="sb" onclick="resetRegForm()" style="margin-top:16px"><span class="bt">Записать ещё кого-то</span></button>
       </div>
     </div>
   </div>
@@ -687,12 +689,12 @@ function sendToSheet(data) {
 //  РЕГИСТРАЦИЯ
 // ============================================================
 function submitRegistration() {
-  var n = document.getElementById('fn').value.trim();
-  var t = document.getElementById('ft').value.trim().replace('@', '');
+  var name = document.getElementById('fn').value.trim();
+  var tg = document.getElementById('ft').value.trim().replace('@', '');
   var email = document.getElementById('femail').value.trim();
-  var e = document.getElementById('fe').value;
+  var event = document.getElementById('fe').value;
   var exp = document.getElementById('fexp').value;
-  var i = document.getElementById('fi').value.trim();
+  var idea = document.getElementById('fi').value.trim();
   var btn = document.getElementById('sb');
 
   // Сброс ошибок
@@ -700,8 +702,8 @@ function submitRegistration() {
   document.querySelectorAll('#fv .em').forEach(function(x) { x.style.display = 'none'; });
 
   var bad = 0;
-  if (!n) { document.getElementById('fn').classList.add('er'); document.getElementById('en').style.display = 'block'; bad = 1; }
-  if (!t) { document.getElementById('ft').classList.add('er'); document.getElementById('et').style.display = 'block'; bad = 1; }
+  if (!name) { document.getElementById('fn').classList.add('er'); document.getElementById('en').style.display = 'block'; bad = 1; }
+  if (!tg) { document.getElementById('ft').classList.add('er'); document.getElementById('et').style.display = 'block'; bad = 1; }
   if (bad) return;
 
   btn.classList.add('ld');
@@ -709,11 +711,11 @@ function submitRegistration() {
 
   sendToSheet({
     type: 'registration',
-    name: n,
-    telegram: t,
+    name: name,
+    telegram: tg,
     email: email,
-    event: e || '-',
-    idea: i || '-',
+    event: event || '-',
+    idea: idea || '-',
     experience: exp || '-'
   }).then(function(res) {
     document.getElementById('fv').style.display = 'none';
@@ -727,7 +729,22 @@ function submitRegistration() {
     } else {
       showToast('Регистрация записана в таблицу!', 'success');
     }
+  }).catch(function() {
+    btn.classList.remove('ld');
+    btn.disabled = false;
+    showToast('Ошибка при отправке. Попробуй ещё раз', 'error');
   });
+}
+
+function resetRegForm() {
+  document.getElementById('ov').classList.remove('sh');
+  document.getElementById('fv').style.display = '';
+  document.getElementById('fn').value = '';
+  document.getElementById('ft').value = '';
+  document.getElementById('femail').value = '';
+  document.getElementById('fe').value = '';
+  document.getElementById('fexp').value = '';
+  document.getElementById('fi').value = '';
 }
 
 // ============================================================
@@ -775,7 +792,21 @@ function submitDemo() {
 
     // Обновляем галерею
     loadDemoGallery();
+  }).catch(function() {
+    btn.classList.remove('ld');
+    btn.disabled = false;
+    showToast('Ошибка при отправке демо. Попробуй ещё раз', 'error');
   });
+}
+
+function resetDemoForm() {
+  document.getElementById('demoOk').classList.remove('sh');
+  document.getElementById('demoFormView').style.display = '';
+  document.getElementById('demoName').value = '';
+  document.getElementById('demoProject').value = '';
+  document.getElementById('demoUrl').value = '';
+  document.getElementById('demoDesc').value = '';
+  document.getElementById('demoEvent').value = '';
 }
 
 // ============================================================
@@ -849,7 +880,7 @@ function loadDemoGallery() {
 
 function loadLocalDemos() {
   var demos = JSON.parse(localStorage.getItem('wm_demos') || '[]');
-  renderGallery(demos.reverse());
+  renderGallery(demos.slice().reverse());
 }
 
 // ============================================================
@@ -971,6 +1002,7 @@ document.getElementById('recDownload').addEventListener('click', function() {
 // ============================================================
 //  COUNTDOWN
 // ============================================================
+var countdownInterval = null;
 function updateCountdown() {
   var now = new Date();
   var next = null;
@@ -986,9 +1018,11 @@ function updateCountdown() {
 
   if (!next) {
     document.getElementById('countdown').style.display = 'none';
+    if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
     return;
   }
 
+  document.getElementById('countdown').style.display = '';
   var diff = next - now;
   var d = Math.floor(diff / 86400000);
   var h = Math.floor((diff % 86400000) / 3600000);
@@ -1002,7 +1036,7 @@ function updateCountdown() {
   document.getElementById('cd-event').textContent = nextName;
 }
 updateCountdown();
-setInterval(updateCountdown, 1000);
+countdownInterval = setInterval(updateCountdown, 1000);
 
 // ============================================================
 //  SCROLL ANIMATIONS
