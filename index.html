@@ -164,56 +164,6 @@ section{padding:96px 0}
 .demo-feat h4{font-size:15px;font-weight:600;margin-bottom:3px}
 .demo-feat p{font-size:14px;color:var(--g500);line-height:1.5}
 
-/* DEMO UPLOAD FORM */
-.demo-upload{margin-top:64px}
-.demo-upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
-@media(max-width:700px){.demo-upload-grid{grid-template-columns:1fr;gap:32px}}
-
-.upload-card{border:1px solid var(--g200);border-radius:16px;padding:32px;background:var(--white);position:relative}
-.upload-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);border-radius:16px 16px 0 0}
-.upload-card h3{font-family:var(--serif);font-size:22px;margin-bottom:4px;letter-spacing:-0.02em}
-.upload-card .uc-sub{font-size:14px;color:var(--g500);margin-bottom:24px}
-
-/* SCREEN RECORDER */
-.recorder-card{border:2px dashed var(--g300);border-radius:16px;padding:32px;text-align:center;transition:all .3s}
-.recorder-card:hover{border-color:var(--violet)}
-.recorder-card.recording{border-color:var(--pink);background:rgba(236,72,153,0.02)}
-.rec-icon{font-size:48px;margin-bottom:12px}
-.recorder-card h3{font-family:var(--serif);font-size:22px;margin-bottom:4px}
-.recorder-card .rc-sub{font-size:14px;color:var(--g500);margin-bottom:20px}
-.rec-timer{font-family:var(--mono);font-size:28px;color:var(--pink);margin-bottom:16px;display:none}
-.rec-timer.active{display:block}
-.rec-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.rec-btn{padding:12px 24px;border-radius:10px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
-.rec-btn--start{background:var(--pink);color:var(--white)}
-.rec-btn--start:hover{background:#db2777;transform:translateY(-1px)}
-.rec-btn--stop{background:#ef4444;color:var(--white)}
-.rec-btn--stop:hover{background:#dc2626}
-.rec-btn--download{background:var(--black);color:var(--white)}
-.rec-btn--download:hover{background:var(--g800);transform:translateY(-1px)}
-.rec-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.rec-preview{margin-top:16px;border-radius:10px;overflow:hidden;display:none}
-.rec-preview video{width:100%;border-radius:10px}
-.rec-hint{font-size:12px;color:var(--g400);margin-top:12px}
-
-/* DEMO GALLERY */
-.demo-gallery{margin-top:64px}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-@media(max-width:400px){.gallery-grid{grid-template-columns:1fr}}
-.gallery-card{border:1px solid var(--g200);border-radius:14px;overflow:hidden;background:var(--white);transition:all .25s}
-.gallery-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.08)}
-.gallery-thumb{position:relative;aspect-ratio:16/9;background:var(--g100);overflow:hidden}
-.gallery-thumb iframe{width:100%;height:100%;border:none}
-.gallery-thumb .thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(135deg,var(--g100),var(--g200))}
-.gallery-info{padding:16px}
-.gallery-info h4{font-size:15px;font-weight:600;margin-bottom:4px}
-.gallery-info .gi-author{font-size:13px;color:var(--g500);margin-bottom:6px}
-.gallery-info .gi-desc{font-size:13px;color:var(--g600);line-height:1.5}
-.gallery-info .gi-event{font-family:var(--mono);font-size:11px;color:var(--violet);margin-top:8px}
-.gallery-empty{text-align:center;padding:60px 20px;color:var(--g400)}
-.gallery-empty .ge-icon{font-size:48px;margin-bottom:12px}
-.gallery-empty p{font-size:15px}
-
 /* LOCATION */
 .lc{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--g200);border-radius:16px;overflow:hidden;background:var(--white)}
 @media(max-width:700px){.lc{grid-template-columns:1fr}}
@@ -303,7 +253,7 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
   <nav id="nav">
     <a href="#events">Расписание</a>
     <a href="#rules">Правила</a>
-    <a href="#demos">Демо</a>
+    <a href="#demos">Сообщество</a>
     <a href="#location">Локация</a>
     <a href="#faq">FAQ</a>
     <a href="#register" class="nav-cta">Записаться</a>
@@ -408,122 +358,34 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
 </div>
 </section>
 
-<!-- DEMO SECTION -->
+<!-- COMMUNITY -->
 <section id="demos" class="demo-section">
 <div class="container">
   <div class="demo-grid reveal">
     <div>
-      <div class="stag">// демо-день</div>
-      <div class="stit">Каждый проект<br>остаётся в истории</div>
-      <p class="sdesc">В конце хакатона каждый участник записывает 3-минутное демо. Все видео собираются в галерее — портфолио сообщества.</p>
+      <div class="stag">// сообщество</div>
+      <div class="stit">Смотри как это<br>проходит</div>
+      <p class="sdesc">Демо проектов, анонсы хакатонов и общение — всё в нашем Telegram-канале. Подписывайся, чтобы быть в курсе.</p>
       <div class="demo-features">
         <div class="demo-feat">
-          <div class="demo-feat-ic">~</div>
-          <div><h4>Запись экрана</h4><p>Встроенный рекордер прямо на сайте — запиши демо в один клик</p></div>
+          <div class="demo-feat-ic">&#127916;</div>
+          <div><h4>Демо участников</h4><p>Видео проектов, созданных за один день на хакатонах</p></div>
         </div>
         <div class="demo-feat">
-          <div class="demo-feat-ic">+</div>
-          <div><h4>Загрузка видео</h4><p>Вставь ссылку на YouTube, Loom или Google Drive</p></div>
+          <div class="demo-feat-ic">&#128227;</div>
+          <div><h4>Анонсы событий</h4><p>Темы, даты и форматы ближайших хакатонов</p></div>
         </div>
         <div class="demo-feat">
-          <div class="demo-feat-ic">*</div>
-          <div><h4>Портфолио сообщества</h4><p>Все демо в галерее — показывай инвесторам и партнёрам</p></div>
+          <div class="demo-feat-ic">&#128172;</div>
+          <div><h4>Чат сообщества</h4><p>Находи единомышленников и обсуждай идеи</p></div>
         </div>
       </div>
+      <a href="https://t.me/worldmodelhackatons" target="_blank" class="btn-b btn-dk" style="margin-top:32px">Открыть Telegram-канал &#8594;</a>
     </div>
     <div class="demo-visual">
-      <div class="demo-icon">&#9654;</div>
-      <p>50+ демо-записей от участников хакатонов</p>
-      <div class="code-tag">v2.0 — Галерея + загрузка</div>
-    </div>
-  </div>
-
-  <!-- DEMO UPLOAD -->
-  <div class="demo-upload reveal">
-    <div class="stag">// загрузить демо</div>
-    <div class="stit" style="font-size:clamp(24px,3vw,36px)">Отправить своё демо</div>
-    <p class="sdesc">Запиши экран или вставь ссылку на видео — оно автоматически появится в галерее.</p>
-
-    <div class="demo-upload-grid">
-      <!-- Screen Recorder -->
-      <div class="recorder-card" id="recorderCard">
-        <div class="rec-icon">&#9679;</div>
-        <h3>Записать экран</h3>
-        <p class="rc-sub">Запись экрана прямо в браузере. Скачай и загрузи на YouTube.</p>
-        <div class="rec-timer" id="recTimer">00:00</div>
-        <div class="rec-controls">
-          <button class="rec-btn rec-btn--start" id="recStart">Начать запись</button>
-          <button class="rec-btn rec-btn--stop" id="recStop" disabled>Остановить</button>
-        </div>
-        <div class="rec-preview" id="recPreview">
-          <video id="recVideo" controls></video>
-        </div>
-        <div class="rec-controls" style="margin-top:10px">
-          <button class="rec-btn rec-btn--download" id="recDownload" disabled>Скачать видео</button>
-        </div>
-        <p class="rec-hint">После скачивания загрузи видео на YouTube и вставь ссылку в форму справа</p>
-      </div>
-
-      <!-- Video Link Upload Form -->
-      <div class="upload-card">
-        <h3>Отправить ссылку</h3>
-        <p class="uc-sub">Вставь ссылку на YouTube, Loom, Vimeo или Google Drive</p>
-        <div id="demoFormView">
-          <div class="fd">
-            <label>Имя <span class="rq">*</span></label>
-            <input type="text" id="demoName" placeholder="Как тебя зовут?" autocomplete="name">
-            <div class="em" id="demoNameErr">Укажи имя</div>
-          </div>
-          <div class="fd">
-            <label>Название проекта <span class="rq">*</span></label>
-            <input type="text" id="demoProject" placeholder="Например: AI-ассистент для юристов">
-            <div class="em" id="demoProjectErr">Укажи название проекта</div>
-          </div>
-          <div class="fd">
-            <label>Ссылка на видео <span class="rq">*</span></label>
-            <input type="url" id="demoUrl" placeholder="https://youtube.com/watch?v=...">
-            <div class="em" id="demoUrlErr">Вставь ссылку на видео</div>
-            <div class="ht">YouTube, Loom, Vimeo или Google Drive</div>
-          </div>
-          <div class="fd">
-            <label>Описание проекта</label>
-            <textarea id="demoDesc" placeholder="Коротко расскажи что делает проект и какую проблему решает"></textarea>
-          </div>
-          <div class="fd">
-            <label>Событие</label>
-            <select id="demoEvent">
-              <option value="">Выбери из списка</option>
-              <option>1 мар — Хакатон: Копируем SaaS</option>
-              <option>8 мар — Хакатон: AI-агенты</option>
-              <option>12 мар — Воркшоп: Vibe Coding</option>
-              <option>Другое</option>
-            </select>
-          </div>
-          <button class="sb" id="demoSubmit" onclick="submitDemo()">
-            <span class="bt">Отправить демо</span>
-            <span class="sp"></span>
-          </button>
-        </div>
-        <div class="ok" id="demoOk">
-          <div class="ok-r">&#10003;</div>
-          <h3>Демо отправлено!</h3>
-          <p>Видео появится в галерее. Спасибо за участие!</p>
-          <button class="sb" onclick="resetDemoForm()" style="margin-top:16px"><span class="bt">Отправить ещё</span></button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DEMO GALLERY -->
-  <div class="demo-gallery reveal">
-    <div class="stag" style="margin-top:16px">// галерея</div>
-    <div class="stit" style="font-size:clamp(24px,3vw,36px)">Демо участников</div>
-    <p class="sdesc">Проекты, созданные на наших хакатонах</p>
-    <div class="gallery-grid" id="galleryGrid">
-      <div class="gallery-empty">
-        <div class="ge-icon">&#9881;</div>
-        <p>Демо загружаются...</p>
-      </div>
+      <div class="demo-icon">&#9992;</div>
+      <p>Демо, анонсы и чат сообщества в одном месте</p>
+      <a href="https://t.me/worldmodelhackatons" target="_blank" class="code-tag" style="text-decoration:none;cursor:pointer">@worldmodelhackatons</a>
     </div>
   </div>
 </div>
@@ -617,7 +479,7 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
 </div>
 </section>
 
-<footer><div class="container"><div class="fc">&copy; 2025–2026 Модель Мира</div><div class="flinks"><a href="https://t.me/" target="_blank">Telegram</a><a href="#events">Расписание</a><a href="#register">Регистрация</a></div></div></footer>
+<footer><div class="container"><div class="fc">&copy; 2025–2026 Модель Мира</div><div class="flinks"><a href="https://t.me/worldmodelhackatons" target="_blank">Telegram</a><a href="#events">Расписание</a><a href="#register">Регистрация</a></div></div></footer>
 
 <!-- BACK TO TOP -->
 <button class="back-to-top" id="backToTop" aria-label="Наверх">&#8593;</button>
@@ -746,258 +608,6 @@ function resetRegForm() {
   document.getElementById('fexp').value = '';
   document.getElementById('fi').value = '';
 }
-
-// ============================================================
-//  ОТПРАВКА ДЕМО
-// ============================================================
-function submitDemo() {
-  var name = document.getElementById('demoName').value.trim();
-  var project = document.getElementById('demoProject').value.trim();
-  var url = document.getElementById('demoUrl').value.trim();
-  var desc = document.getElementById('demoDesc').value.trim();
-  var event = document.getElementById('demoEvent').value;
-  var btn = document.getElementById('demoSubmit');
-
-  // Сброс ошибок
-  document.querySelectorAll('#demoFormView .er').forEach(function(x) { x.classList.remove('er'); });
-  document.querySelectorAll('#demoFormView .em').forEach(function(x) { x.style.display = 'none'; });
-
-  var bad = 0;
-  if (!name) { document.getElementById('demoName').classList.add('er'); document.getElementById('demoNameErr').style.display = 'block'; bad = 1; }
-  if (!project) { document.getElementById('demoProject').classList.add('er'); document.getElementById('demoProjectErr').style.display = 'block'; bad = 1; }
-  if (!url) { document.getElementById('demoUrl').classList.add('er'); document.getElementById('demoUrlErr').style.display = 'block'; bad = 1; }
-  if (bad) return;
-
-  btn.classList.add('ld');
-  btn.disabled = true;
-
-  sendToSheet({
-    type: 'demo',
-    name: name,
-    project: project,
-    videoUrl: url,
-    description: desc || '-',
-    event: event || '-'
-  }).then(function(res) {
-    document.getElementById('demoFormView').style.display = 'none';
-    document.getElementById('demoOk').classList.add('sh');
-    btn.classList.remove('ld');
-    btn.disabled = false;
-
-    if (res.local) {
-      showToast('Демо сохранено локально', 'info');
-    } else {
-      showToast('Демо загружено в галерею!', 'success');
-    }
-
-    // Обновляем галерею
-    loadDemoGallery();
-  }).catch(function() {
-    btn.classList.remove('ld');
-    btn.disabled = false;
-    showToast('Ошибка при отправке демо. Попробуй ещё раз', 'error');
-  });
-}
-
-function resetDemoForm() {
-  document.getElementById('demoOk').classList.remove('sh');
-  document.getElementById('demoFormView').style.display = '';
-  document.getElementById('demoName').value = '';
-  document.getElementById('demoProject').value = '';
-  document.getElementById('demoUrl').value = '';
-  document.getElementById('demoDesc').value = '';
-  document.getElementById('demoEvent').value = '';
-}
-
-// ============================================================
-//  ЗАГРУЗКА ГАЛЕРЕИ ДЕМО
-// ============================================================
-function getYouTubeId(url) {
-  var match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
-  return match ? match[1] : null;
-}
-
-function getLoomId(url) {
-  var match = url.match(/loom\.com\/share\/([a-zA-Z0-9]+)/);
-  return match ? match[1] : null;
-}
-
-function renderGallery(demos) {
-  var grid = document.getElementById('galleryGrid');
-
-  if (!demos || demos.length === 0) {
-    grid.innerHTML = '<div class="gallery-empty"><div class="ge-icon">&#127916;</div><p>Пока нет демо. Будь первым — загрузи своё!</p></div>';
-    return;
-  }
-
-  grid.innerHTML = '';
-  demos.forEach(function(demo) {
-    var card = document.createElement('div');
-    card.className = 'gallery-card';
-
-    var thumbHtml = '';
-    var ytId = getYouTubeId(demo.videoUrl || '');
-    var loomId = getLoomId(demo.videoUrl || '');
-
-    if (ytId) {
-      thumbHtml = '<iframe src="https://www.youtube.com/embed/' + ytId + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>';
-    } else if (loomId) {
-      thumbHtml = '<iframe src="https://www.loom.com/embed/' + loomId + '" allowfullscreen loading="lazy"></iframe>';
-    } else {
-      thumbHtml = '<div class="thumb-placeholder">&#9654;</div>';
-    }
-
-    card.innerHTML =
-      '<div class="gallery-thumb">' + thumbHtml + '</div>' +
-      '<div class="gallery-info">' +
-        '<h4>' + escapeHtml(demo.project || 'Проект') + '</h4>' +
-        '<div class="gi-author">' + escapeHtml(demo.name || 'Участник') + '</div>' +
-        '<div class="gi-desc">' + escapeHtml(demo.description || '') + '</div>' +
-        (demo.event ? '<div class="gi-event">' + escapeHtml(demo.event) + '</div>' : '') +
-      '</div>';
-
-    grid.appendChild(card);
-  });
-}
-
-function escapeHtml(text) {
-  var div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function loadDemoGallery() {
-  // Из Google Sheets
-  if (APPS_SCRIPT_URL) {
-    fetch(APPS_SCRIPT_URL + '?action=getDemos')
-      .then(function(r) { return r.json(); })
-      .then(function(data) { renderGallery(data.demos || []); })
-      .catch(function() { loadLocalDemos(); });
-  } else {
-    loadLocalDemos();
-  }
-}
-
-function loadLocalDemos() {
-  var demos = JSON.parse(localStorage.getItem('wm_demos') || '[]');
-  renderGallery(demos.slice().reverse());
-}
-
-// ============================================================
-//  РЕКОРДЕР ЭКРАНА
-// ============================================================
-var mediaRecorder = null;
-var recordedChunks = [];
-var recordedBlob = null;
-var recStartTime = 0;
-var recInterval = null;
-
-var prevPreviewUrl = null;
-
-document.getElementById('recStart').addEventListener('click', function() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
-    showToast('Браузер не поддерживает запись экрана', 'error');
-    return;
-  }
-
-  navigator.mediaDevices.getDisplayMedia({
-    video: { mediaSource: 'screen' },
-    audio: true
-  }).then(function(stream) {
-    try {
-      recordedChunks = [];
-      recordedBlob = null;
-
-      // Очистка предыдущего превью
-      if (prevPreviewUrl) {
-        URL.revokeObjectURL(prevPreviewUrl);
-        prevPreviewUrl = null;
-      }
-
-      // Определяем поддерживаемый mimeType
-      var mimeType = 'video/webm';
-      if (typeof MediaRecorder !== 'undefined' && !MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = '';
-      }
-      mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType: mimeType } : undefined);
-
-      var recMimeType = mediaRecorder.mimeType || 'video/webm';
-
-      mediaRecorder.ondataavailable = function(e) {
-        if (e.data.size > 0) recordedChunks.push(e.data);
-      };
-
-      mediaRecorder.onstop = function() {
-        recordedBlob = new Blob(recordedChunks, { type: recMimeType });
-        prevPreviewUrl = URL.createObjectURL(recordedBlob);
-        var video = document.getElementById('recVideo');
-        video.src = prevPreviewUrl;
-        document.getElementById('recPreview').style.display = 'block';
-        document.getElementById('recDownload').disabled = false;
-        document.getElementById('recorderCard').classList.remove('recording');
-        clearInterval(recInterval);
-
-        // Остановить все треки
-        stream.getTracks().forEach(function(track) { track.stop(); });
-      };
-
-      mediaRecorder.start();
-
-      document.getElementById('recStart').disabled = true;
-      document.getElementById('recStop').disabled = false;
-      document.getElementById('recorderCard').classList.add('recording');
-
-      // Сброс и старт таймера
-      recStartTime = Date.now();
-      var timerEl = document.getElementById('recTimer');
-      timerEl.textContent = '00:00';
-      timerEl.classList.add('active');
-      if (recInterval) clearInterval(recInterval);
-      recInterval = setInterval(function() {
-        var elapsed = Math.floor((Date.now() - recStartTime) / 1000);
-        var mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
-        var ss = String(elapsed % 60).padStart(2, '0');
-        timerEl.textContent = mm + ':' + ss;
-      }, 1000);
-
-      showToast('Запись началась', 'success');
-
-      // Если пользователь останавливает шаринг через UI браузера
-      stream.getVideoTracks()[0].onended = function() {
-        if (mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-      };
-    } catch (err) {
-      stream.getTracks().forEach(function(track) { track.stop(); });
-      showToast('Ошибка записи: ' + err.message, 'error');
-      document.getElementById('recStart').disabled = false;
-      document.getElementById('recStop').disabled = true;
-    }
-  }).catch(function(err) {
-    if (err.name !== 'NotAllowedError') {
-      showToast('Ошибка записи: ' + err.message, 'error');
-    }
-  });
-});
-
-document.getElementById('recStop').addEventListener('click', function() {
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    mediaRecorder.stop();
-  }
-  document.getElementById('recStart').disabled = false;
-  document.getElementById('recStop').disabled = true;
-});
-
-document.getElementById('recDownload').addEventListener('click', function() {
-  if (!recordedBlob) return;
-  var dlUrl = URL.createObjectURL(recordedBlob);
-  var ext = recordedBlob.type.includes('mp4') ? 'mp4' : 'webm';
-  var a = document.createElement('a');
-  a.href = dlUrl;
-  a.download = 'demo-' + new Date().toISOString().slice(0, 10) + '.' + ext;
-  a.click();
-  setTimeout(function() { URL.revokeObjectURL(dlUrl); }, 1000);
-  showToast('Видео скачано! Загрузи на YouTube и вставь ссылку', 'info');
-});
 
 // ============================================================
 //  COUNTDOWN
@@ -1135,16 +745,10 @@ document.querySelectorAll('#fv input').forEach(function(el) {
     if (e.key === 'Enter') submitRegistration();
   });
 });
-document.querySelectorAll('#demoFormView input').forEach(function(el) {
-  el.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') submitDemo();
-  });
-});
 
 // ============================================================
 //  INIT
 // ============================================================
-loadDemoGallery();
 </script>
 </body>
 </html>
