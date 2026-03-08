@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Модель Мира — AI Хакатоны в Москве</title>
+<meta name="description" content="Еженедельные AI-хакатоны в Москве. Предприниматели и разработчики за один день превращают идеи в работающие прототипы.">
+<meta property="og:title" content="Модель Мира — AI Хакатоны">
+<meta property="og:description" content="Собираем людей, которые строят с AI. Хакатоны каждую неделю в Москве.">
+<meta property="og:image" content="photo-hackathon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -11,7 +15,7 @@
 html{scroll-behavior:smooth}
 :root{
 --black:#09090b;--white:#fafafa;--g50:#f8f8f8;--g100:#f0f0f0;--g200:#e4e4e7;--g300:#d4d4d8;--g400:#a1a1aa;--g500:#71717a;--g600:#52525b;--g700:#3f3f46;--g800:#27272a;--g900:#18181b;
---pink:#ec4899;--violet:#8b5cf6;--cyan:#06b6d4;
+--pink:#ec4899;--violet:#8b5cf6;--cyan:#06b6d4;--green:#10b981;
 --grad:linear-gradient(135deg,#ec4899,#8b5cf6,#06b6d4);
 --serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
 }
@@ -19,8 +23,23 @@ body{font-family:var(--sans);background:var(--white);color:var(--black);-webkit-
 .container{max-width:1140px;margin:0 auto;padding:0 32px}
 @media(max-width:640px){.container{padding:0 20px}}
 
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* TOAST */
+.toast-container{position:fixed;top:80px;right:20px;z-index:1000;display:flex;flex-direction:column;gap:8px}
+.toast{padding:14px 20px;border-radius:12px;font-size:14px;font-weight:500;color:var(--white);display:flex;align-items:center;gap:10px;animation:toastIn .4s ease-out;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-width:360px;backdrop-filter:blur(8px)}
+.toast--success{background:rgba(16,185,129,0.95)}
+.toast--error{background:rgba(239,68,68,0.95)}
+.toast--info{background:rgba(139,92,246,0.95)}
+.toast.out{animation:toastOut .3s ease-in forwards}
+@keyframes toastIn{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100px)}}
+
 /* HEADER */
-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 0;background:rgba(250,250,250,0.82);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid var(--g200)}
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 0;background:rgba(250,250,250,0.82);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid var(--g200);transition:box-shadow .3s}
+header.scrolled{box-shadow:0 1px 12px rgba(0,0,0,0.06)}
 header .container{display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--black)}
 .logo img{height:38px;width:38px;border-radius:8px;object-fit:cover}
@@ -30,7 +49,20 @@ nav a{font-size:14px;font-weight:500;color:var(--g600);text-decoration:none;tran
 nav a:hover{color:var(--black)}
 .nav-cta{padding:9px 22px;background:var(--black);color:var(--white)!important;border-radius:8px;font-weight:600;font-size:13px;transition:background .2s,transform .15s}
 .nav-cta:hover{background:var(--g800);transform:translateY(-1px)}
-@media(max-width:700px){nav a:not(.nav-cta){display:none}}
+
+/* MOBILE MENU */
+.burger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px}
+.burger span{display:block;width:22px;height:2px;background:var(--black);border-radius:2px;transition:all .3s}
+.burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+@media(max-width:700px){
+  .burger{display:flex}
+  nav{position:fixed;top:66px;left:0;right:0;background:var(--white);flex-direction:column;padding:20px;border-bottom:1px solid var(--g200);gap:16px;transform:translateY(-120%);transition:transform .3s ease;opacity:0;pointer-events:none}
+  nav.open{transform:translateY(0);opacity:1;pointer-events:all}
+  nav a{font-size:16px;width:100%;text-align:center;padding:10px 0}
+  nav .nav-cta{width:100%;text-align:center;display:block}
+}
 
 /* HERO */
 .hero{padding:130px 0 80px;position:relative;overflow:hidden}
@@ -55,7 +87,17 @@ nav a:hover{color:var(--black)}
 .hero-photo::after{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.08)}
 .photo-caption{position:absolute;bottom:12px;left:12px;padding:6px 12px;background:rgba(9,9,11,0.75);backdrop-filter:blur(8px);border-radius:8px;font-size:12px;font-weight:500;color:var(--white);display:flex;align-items:center;gap:6px}
 
-.hero-kpi{margin-top:56px;display:flex;gap:48px;flex-wrap:wrap}
+/* COUNTDOWN */
+.countdown-bar{margin-top:32px;padding:16px 24px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.countdown-bar .cb-label{font-size:13px;font-weight:600;color:var(--g600)}
+.countdown-bar .cb-timer{display:flex;gap:10px}
+.countdown-bar .cb-unit{text-align:center}
+.countdown-bar .cb-num{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--black);background:var(--white);border:1px solid var(--g200);border-radius:8px;padding:4px 10px;min-width:48px;display:block}
+.countdown-bar .cb-txt{font-size:10px;color:var(--g500);margin-top:2px;text-transform:uppercase;letter-spacing:.05em;display:block}
+.countdown-bar .cb-event{font-size:13px;color:var(--g500);margin-left:auto}
+@media(max-width:600px){.countdown-bar .cb-event{margin-left:0;width:100%}}
+
+.hero-kpi{margin-top:32px;display:flex;gap:48px;flex-wrap:wrap}
 .kpi span:first-child{font-family:var(--serif);font-size:36px;letter-spacing:-0.03em;line-height:1;display:block}
 .kpi span:last-child{font-size:13px;color:var(--g500);margin-top:4px;display:block}
 
@@ -81,60 +123,31 @@ section{padding:96px 0}
 .ev-c{padding:10px 24px;border-radius:8px;background:var(--black);color:var(--white);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .2s;border:none;cursor:pointer;font-family:var(--sans)}
 .ev-c:hover{background:var(--g800);transform:translateY(-1px)}
 .ev-s{opacity:.4;pointer-events:none}
-  
 @media(max-width:700px){.ev{grid-template-columns:1fr;gap:14px}.ev-day,.ev-mo{text-align:left}.ev-c{width:100%;text-align:center;padding:12px}}
 
-/* RULES (dark) — premium killer */
-.dark{background:var(--black);color:var(--white);position:relative;overflow:hidden;padding:120px 0}
-.dark::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(255,255,255,0.015) 79px,rgba(255,255,255,0.015) 80px),repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(255,255,255,0.015) 79px,rgba(255,255,255,0.015) 80px);pointer-events:none}
-.dark::after{content:'';position:absolute;top:-300px;right:-200px;width:900px;height:900px;background:radial-gradient(circle,rgba(139,92,246,0.07) 0%,rgba(236,72,153,0.03) 40%,transparent 70%);pointer-events:none;animation:glowPulse 8s ease-in-out infinite}
-@keyframes glowPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+/* RULES (dark) */
+.dark{background:var(--black);color:var(--white);position:relative;overflow:hidden}
+.dark::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,0.025) 59px,rgba(255,255,255,0.025) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,0.025) 59px,rgba(255,255,255,0.025) 60px);pointer-events:none}
 .dark .stag{color:var(--g400)}.dark .sdesc{color:var(--g500)}
-.dark .stit{color:#fff;margin-bottom:16px}
-.rules-intro{max-width:560px;margin-bottom:72px;position:relative;z-index:2}
-.rules-intro .sdesc{font-size:18px;line-height:1.65}
-.rules-block{margin-bottom:48px;position:relative;z-index:2;animation:fadeUp .6s ease-out both}
-.rules-block:nth-child(2){animation-delay:.1s}
-.rules-block:nth-child(3){animation-delay:.25s}
-.rules-block:nth-child(4){animation-delay:.4s}
-.rules-block-header{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:8px 18px;border-radius:100px;display:inline-flex;align-items:center;gap:8px;margin-bottom:28px}
-.rules-block-header::before{content:'';width:7px;height:7px;border-radius:50%;display:inline-block}
-.rules-block-header--ok{color:#a3e635;background:rgba(163,230,53,0.06);border:1px solid rgba(163,230,53,0.15)}
-.rules-block-header--ok::before{background:#a3e635;box-shadow:0 0 12px rgba(163,230,53,0.6)}
-.rules-block-header--notok{color:#f87171;background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.15)}
-.rules-block-header--notok::before{background:#f87171;box-shadow:0 0 12px rgba(248,113,113,0.6)}
-.rules-block-header--rec{color:#60a5fa;background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.15)}
-.rules-block-header--rec::before{background:#60a5fa;box-shadow:0 0 12px rgba(96,165,250,0.6)}
-.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative;z-index:1}
-.rg--2col{grid-template-columns:repeat(2,1fr)}
-.rg--1col{grid-template-columns:1fr}
+.rules-block{margin-bottom:32px}
+.rules-block-header{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.rules-block-header--ok{color:#a3e635;background:rgba(163,230,53,0.08);border:1px solid rgba(163,230,53,0.2)}
+.rules-block-header--notok{color:#f87171;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2)}
+.rules-block-header--rec{color:#60a5fa;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.2)}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative;z-index:1}
+.rg--list{grid-template-columns:1fr}
+@media(min-width:601px){.rg--list{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}}
 @media(max-width:900px){.rg{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.rg,.rg--2col{grid-template-columns:1fr}}
-.ru{padding:32px;border:1px solid rgba(255,255,255,0.06);border-radius:20px;background:rgba(255,255,255,0.02);transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;backdrop-filter:blur(8px)}
-.ru::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);transition:opacity .4s}
-.ru::after{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(circle at 50% 0%,rgba(139,92,246,0.06),transparent 60%);opacity:0;transition:opacity .4s}
-.ru:hover{border-color:rgba(139,92,246,0.25);background:rgba(139,92,246,0.04);transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,0.4),0 0 0 1px rgba(139,92,246,0.12),0 0 60px rgba(139,92,246,0.05)}
-.ru:hover::before{opacity:0}
-.ru:hover::after{opacity:1}
-.ru-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:22px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);transition:all .4s;position:relative;z-index:1}
-.ru:hover .ru-icon{transform:scale(1.08) translateY(-2px)}
-.ru-icon--ok{background:linear-gradient(135deg,rgba(163,230,53,0.08),rgba(163,230,53,0.02));border-color:rgba(163,230,53,0.15)}
-.ru:hover .ru-icon--ok{background:linear-gradient(135deg,rgba(163,230,53,0.15),rgba(163,230,53,0.05));border-color:rgba(163,230,53,0.3);box-shadow:0 8px 24px rgba(163,230,53,0.1)}
-.ru-n{font-family:var(--mono);font-size:11px;color:var(--g600);margin-bottom:8px;letter-spacing:.1em;font-weight:600;position:relative;z-index:1}
-.ru h3{font-family:var(--serif);font-size:21px;margin-bottom:10px;font-weight:400;line-height:1.25;letter-spacing:-0.015em;position:relative;z-index:1}
-.ru p{font-size:14px;line-height:1.7;color:var(--g500);position:relative;z-index:1}
-.ru--notok{border-color:rgba(248,113,113,0.1);background:rgba(248,113,113,0.015)}
-.ru--notok::after{background:radial-gradient(circle at 50% 0%,rgba(248,113,113,0.06),transparent 60%)}
-.ru--notok:hover{border-color:rgba(248,113,113,0.3);background:rgba(248,113,113,0.04);box-shadow:0 24px 48px rgba(0,0,0,0.4),0 0 0 1px rgba(248,113,113,0.12),0 0 60px rgba(248,113,113,0.05)}
-.ru--notok .ru-icon{background:linear-gradient(135deg,rgba(248,113,113,0.08),rgba(248,113,113,0.02));border-color:rgba(248,113,113,0.15)}
-.ru--notok:hover .ru-icon{background:linear-gradient(135deg,rgba(248,113,113,0.15),rgba(248,113,113,0.05));border-color:rgba(248,113,113,0.3);box-shadow:0 8px 24px rgba(248,113,113,0.1)}
-.ru--rec{border-color:rgba(96,165,250,0.08);background:rgba(96,165,250,0.015)}
-.ru--rec::after{background:radial-gradient(circle at 50% 0%,rgba(96,165,250,0.06),transparent 60%)}
-.ru--rec:hover{border-color:rgba(96,165,250,0.25);background:rgba(96,165,250,0.04);box-shadow:0 24px 48px rgba(0,0,0,0.4),0 0 0 1px rgba(96,165,250,0.12),0 0 60px rgba(96,165,250,0.05)}
-.ru--rec .ru-icon{background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(96,165,250,0.02));border-color:rgba(96,165,250,0.15)}
-.ru--rec:hover .ru-icon{background:linear-gradient(135deg,rgba(96,165,250,0.15),rgba(96,165,250,0.05));border-color:rgba(96,165,250,0.3);box-shadow:0 8px 24px rgba(96,165,250,0.1)}
-.rules-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06) 20%,rgba(255,255,255,0.06) 80%,transparent);margin:8px 0 48px;position:relative;z-index:2}
+@media(max-width:600px){.rg{grid-template-columns:1fr}}
+.ru{padding:28px;border:1px solid rgba(255,255,255,0.06);border-radius:14px;background:rgba(255,255,255,0.02);transition:all .25s}
+.ru:hover{border-color:rgba(139,92,246,0.15);background:rgba(139,92,246,0.03);transform:translateY(-2px)}
+.ru--notok{border-color:rgba(248,113,113,0.15);background:rgba(248,113,113,0.03)}
+.ru--notok:hover{border-color:rgba(248,113,113,0.3);background:rgba(248,113,113,0.06)}
+.ru--rec{border-color:rgba(96,165,250,0.1);background:rgba(96,165,250,0.02)}
+.ru--rec:hover{border-color:rgba(96,165,250,0.25);background:rgba(96,165,250,0.05)}
+.ru-n{font-family:var(--mono);font-size:12px;color:var(--g500);margin-bottom:10px;letter-spacing:.05em}
+.ru h3{font-family:var(--serif);font-size:19px;margin-bottom:8px;font-weight:400}
+.ru p{font-size:14px;line-height:1.6;color:var(--g400)}
 
 /* DEMO */
 .demo-section{background:var(--g50);border-top:1px solid var(--g200);border-bottom:1px solid var(--g200)}
@@ -150,6 +163,56 @@ section{padding:96px 0}
 .demo-feat-ic{width:36px;height:36px;border-radius:8px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .demo-feat h4{font-size:15px;font-weight:600;margin-bottom:3px}
 .demo-feat p{font-size:14px;color:var(--g500);line-height:1.5}
+
+/* DEMO UPLOAD FORM */
+.demo-upload{margin-top:64px}
+.demo-upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+@media(max-width:700px){.demo-upload-grid{grid-template-columns:1fr;gap:32px}}
+
+.upload-card{border:1px solid var(--g200);border-radius:16px;padding:32px;background:var(--white);position:relative}
+.upload-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);border-radius:16px 16px 0 0}
+.upload-card h3{font-family:var(--serif);font-size:22px;margin-bottom:4px;letter-spacing:-0.02em}
+.upload-card .uc-sub{font-size:14px;color:var(--g500);margin-bottom:24px}
+
+/* SCREEN RECORDER */
+.recorder-card{border:2px dashed var(--g300);border-radius:16px;padding:32px;text-align:center;transition:all .3s}
+.recorder-card:hover{border-color:var(--violet)}
+.recorder-card.recording{border-color:var(--pink);background:rgba(236,72,153,0.02)}
+.rec-icon{font-size:48px;margin-bottom:12px}
+.recorder-card h3{font-family:var(--serif);font-size:22px;margin-bottom:4px}
+.recorder-card .rc-sub{font-size:14px;color:var(--g500);margin-bottom:20px}
+.rec-timer{font-family:var(--mono);font-size:28px;color:var(--pink);margin-bottom:16px;display:none}
+.rec-timer.active{display:block}
+.rec-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.rec-btn{padding:12px 24px;border-radius:10px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.rec-btn--start{background:var(--pink);color:var(--white)}
+.rec-btn--start:hover{background:#db2777;transform:translateY(-1px)}
+.rec-btn--stop{background:#ef4444;color:var(--white)}
+.rec-btn--stop:hover{background:#dc2626}
+.rec-btn--download{background:var(--black);color:var(--white)}
+.rec-btn--download:hover{background:var(--g800);transform:translateY(-1px)}
+.rec-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.rec-preview{margin-top:16px;border-radius:10px;overflow:hidden;display:none}
+.rec-preview video{width:100%;border-radius:10px}
+.rec-hint{font-size:12px;color:var(--g400);margin-top:12px}
+
+/* DEMO GALLERY */
+.demo-gallery{margin-top:64px}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+@media(max-width:400px){.gallery-grid{grid-template-columns:1fr}}
+.gallery-card{border:1px solid var(--g200);border-radius:14px;overflow:hidden;background:var(--white);transition:all .25s}
+.gallery-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.08)}
+.gallery-thumb{position:relative;aspect-ratio:16/9;background:var(--g100);overflow:hidden}
+.gallery-thumb iframe{width:100%;height:100%;border:none}
+.gallery-thumb .thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(135deg,var(--g100),var(--g200))}
+.gallery-info{padding:16px}
+.gallery-info h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.gallery-info .gi-author{font-size:13px;color:var(--g500);margin-bottom:6px}
+.gallery-info .gi-desc{font-size:13px;color:var(--g600);line-height:1.5}
+.gallery-info .gi-event{font-family:var(--mono);font-size:11px;color:var(--violet);margin-top:8px}
+.gallery-empty{text-align:center;padding:60px 20px;color:var(--g400)}
+.gallery-empty .ge-icon{font-size:48px;margin-bottom:12px}
+.gallery-empty p{font-size:15px}
 
 /* LOCATION */
 .lc{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--g200);border-radius:16px;overflow:hidden;background:var(--white)}
@@ -199,6 +262,21 @@ section{padding:96px 0}
 .ok .ri{display:inline-block;padding:6px 16px;background:var(--g100);border-radius:6px;font-family:var(--mono);font-size:13px;color:var(--g700)}
 @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
+/* FAQ */
+.faq-list{max-width:720px}
+.faq-item{border:1px solid var(--g200);border-radius:12px;margin-bottom:10px;overflow:hidden;background:var(--white)}
+.faq-q{width:100%;padding:18px 24px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-family:var(--sans);font-size:15px;font-weight:600;color:var(--black);text-align:left;transition:background .2s}
+.faq-q:hover{background:var(--g50)}
+.faq-q .faq-arrow{font-size:18px;color:var(--g400);transition:transform .3s;flex-shrink:0;margin-left:16px}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-a-inner{padding:0 24px 18px;font-size:14px;line-height:1.7;color:var(--g600)}
+
+/* BACK TO TOP */
+.back-to-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--black);color:var(--white);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(20px);transition:all .3s;z-index:90;box-shadow:0 4px 16px rgba(0,0,0,0.15);pointer-events:none}
+.back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.back-to-top:hover{background:var(--g800);transform:translateY(-2px)}
+
 /* FOOTER */
 footer{padding:40px 0;border-top:1px solid var(--g200)}
 footer .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
@@ -210,18 +288,25 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
 </head>
 <body>
 
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toasts"></div>
+
 <header>
 <div class="container">
   <a href="#" class="logo">
     <img src="logo.png" alt="Модель Мира">
     <span class="logo-text">Модель Мира</span>
   </a>
-  <nav>
+  <button class="burger" id="burger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+  <nav id="nav">
     <a href="#events">Расписание</a>
     <a href="#rules">Правила</a>
-    <a href="#location">Локация</a>
     <a href="#demos">Демо</a>
-    <a href="#register" class="nav-cta">Записаться →</a>
+    <a href="#location">Локация</a>
+    <a href="#faq">FAQ</a>
+    <a href="#register" class="nav-cta">Записаться</a>
   </nav>
 </div>
 </header>
@@ -236,12 +321,22 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
       <p class="hero-d">Хакатоны, где предприниматели и разработчики за один день превращают идеи в работающие прототипы. Без слайдов — только код и результат.</p>
       <div class="hero-act">
         <a href="#register" class="btn-b btn-dk">Записаться на хакатон</a>
-        <a href="#events" class="btn-b btn-ol">Расписание →</a>
+        <a href="#events" class="btn-b btn-ol">Расписание</a>
+      </div>
+      <div class="countdown-bar" id="countdown">
+        <span class="cb-label">До ближайшего:</span>
+        <div class="cb-timer">
+          <div class="cb-unit"><span class="cb-num" id="cd-d">--</span><span class="cb-txt">дн</span></div>
+          <div class="cb-unit"><span class="cb-num" id="cd-h">--</span><span class="cb-txt">ч</span></div>
+          <div class="cb-unit"><span class="cb-num" id="cd-m">--</span><span class="cb-txt">мин</span></div>
+          <div class="cb-unit"><span class="cb-num" id="cd-s">--</span><span class="cb-txt">сек</span></div>
+        </div>
+        <span class="cb-event" id="cd-event"></span>
       </div>
     </div>
     <div class="hero-photo">
       <img src="photo-hackathon.png" alt="Хакатон Модель Мира в ЗилАрт">
-      <div class="photo-caption">📍 ЗилАрт Еда · Зимний сад</div>
+      <div class="photo-caption">ЗилАрт Еда · Зимний сад</div>
     </div>
   </div>
   <div class="hero-kpi">
@@ -253,30 +348,30 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
 </section>
 
 <!-- EVENTS -->
-<section id="events">
+<section id="events" class="reveal">
 <div class="container">
   <div class="stag">// расписание</div>
   <div class="stit">Ближайшие события</div>
   <p class="sdesc">Офлайн в Москве, онлайн для удалённых. Выбирай формат.</p>
   <div class="eg">
     <div class="ev">
-      <div><div class="ev-day">22</div><div class="ev-mo">фев</div></div>
-      <div><h3>Хакатон: AI-автоматизация бизнеса</h3><div class="ev-m"><span class="tg tg-of">Офлайн</span><span>🕐 11:00–19:00</span><span>📍 ЗилАрт</span></div></div>
-      <div><a href="#register" class="ev-c">Записаться</a></div>
-    </div>
-    <div class="ev">
-      <div><div class="ev-day">26</div><div class="ev-mo">фев</div></div>
-      <div><h3>Воркшоп: Vibe Coding — приложения голосом</h3><div class="ev-m"><span class="tg tg-on">Онлайн</span><span>🕐 19:00–21:00</span><span>💻 Zoom</span></div></div>
-      <div><a href="#register" class="ev-c">Записаться</a></div>
-    </div>
-    <div class="ev">
       <div><div class="ev-day">01</div><div class="ev-mo">мар</div></div>
-      <div><h3>Хакатон: Копируем SaaS за 1 день</h3><div class="ev-m"><span class="tg tg-hy">Гибрид</span><span>🕐 11:00–20:00</span><span>📍 ЗилАрт + Zoom</span></div></div>
+      <div><h3>Хакатон: Копируем SaaS за 1 день</h3><div class="ev-m"><span class="tg tg-hy">Гибрид</span><span>11:00–20:00</span><span>ЗилАрт + Zoom</span></div></div>
+      <div><a href="#register" class="ev-c">Записаться</a></div>
+    </div>
+    <div class="ev">
+      <div><div class="ev-day">08</div><div class="ev-mo">мар</div></div>
+      <div><h3>Хакатон: AI-агенты для бизнеса</h3><div class="ev-m"><span class="tg tg-of">Офлайн</span><span>11:00–19:00</span><span>ЗилАрт</span></div></div>
+      <div><a href="#register" class="ev-c">Записаться</a></div>
+    </div>
+    <div class="ev">
+      <div><div class="ev-day">12</div><div class="ev-mo">мар</div></div>
+      <div><h3>Воркшоп: Vibe Coding — приложения голосом</h3><div class="ev-m"><span class="tg tg-on">Онлайн</span><span>19:00–21:00</span><span>Zoom</span></div></div>
       <div><a href="#register" class="ev-c">Записаться</a></div>
     </div>
     <div class="ev ev-s">
-      <div><div class="ev-day">08</div><div class="ev-mo">мар</div></div>
-      <div><h3>Тема определяется</h3><div class="ev-m"><span class="tg tg-of">Офлайн</span><span>🕐 TBD</span></div></div>
+      <div><div class="ev-day">15</div><div class="ev-mo">мар</div></div>
+      <div><h3>Тема определяется</h3><div class="ev-m"><span class="tg tg-of">Офлайн</span><span>TBD</span></div></div>
       <div><span class="ev-c" style="opacity:.3;cursor:default">Скоро</span></div>
     </div>
   </div>
@@ -285,108 +380,157 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
 
 <!-- RULES -->
 <section id="rules" class="dark">
-<div class="container" style="position:relative;z-index:1">
-<div class="rules-intro">
-<div class="stag">// правила</div>
-<div class="stit">Как это работает</div>
-<p class="sdesc">Три шага от идеи до рабочего прототипа. Без лишних формальностей, только код и результат.</p>
-</div>
-
-<div class="rules-block">
-<div class="rules-block-header rules-block-header--ok">Правила</div>
-<div class="rg">
-<div class="ru">
-<div class="ru-icon ru-icon--ok">✅</div>
-<div class="ru-n">ШАГ 01</div>
-<h3>Проверь доступ к lovable.dev заранее</h3>
-<p>Зарегистрируйся и убедись, что всё работает до начала хакатона. Не трать время на настройку в день события.</p>
-</div>
-<div class="ru">
-<div class="ru-icon ru-icon--ok">📋</div>
-<div class="ru-n">ШАГ 02</div>
-<h3>Идеи — в таблицу</h3>
-<p>Запиши свою идею в общую таблицу, чтобы все видели над чем ты работаешь. Это помогает найти единомышленников.</p>
-</div>
-<div class="ru">
-<div class="ru-icon ru-icon--ok">🎬</div>
-<div class="ru-n">ШАГ 03</div>
-<h3>Демо с видео — в Топик</h3>
-<p>Запиши демо и выложи видео в топик чата. Каждый проект остаётся в истории сообщества навсегда.</p>
-</div>
-</div>
-</div>
-
-<div class="rules-divider"></div>
-
-<div class="rules-block">
-<div class="rules-block-header rules-block-header--notok">Не ок</div>
-<div class="rg rg--1col" style="max-width:560px">
-<div class="ru ru--notok">
-<div class="ru-icon">⛔</div>
-<div class="ru-n">ВАЖНО</div>
-<h3>Тусить / отвлекать, не вайбкодя</h3>
-<p>Хакатон — это про создание. Исключение — эксперт для custdev или помощь с конкретной функцией. Всё остальное — после демо.</p>
-</div>
-</div>
-</div>
-
-<div class="rules-divider"></div>
-
-<div class="rules-block">
-<div class="rules-block-header rules-block-header--rec">Рекомендуем</div>
-<div class="rg rg--2col">
-<div class="ru ru--rec">
-<div class="ru-icon">🎙</div>
-<div class="ru-n">ЛАЙФХАК</div>
-<h3>Говорить промпт в микрофон</h3>
-<p>Голосовой ввод ускоряет работу в 2-3 раза — попробуй диктовать вместо набора. Работает с любым AI-инструментом.</p>
-</div>
-<div class="ru ru--rec">
-<div class="ru-icon">🚀</div>
-<div class="ru-n">СТАРТ</div>
-<h3>Начинать с lovable.dev</h3>
-<p>Даже опытным разработчикам. Быстрый прототип за минуты, потом переходи в VS Code + Opus для тонкой настройки.</p>
-</div>
-</div>
-</div>
-
+<div class="container reveal" style="position:relative;z-index:1">
+  <div class="stag">// правила</div>
+  <div class="stit" style="color:#fff">Как это работает</div>
+  <p class="sdesc">Простые правила — чтобы каждый получил максимум.</p>
+  <div class="rules-block">
+    <div class="rules-block-header rules-block-header--ok">Правила</div>
+    <div class="rg rg--list">
+      <div class="ru"><div class="ru-n">01</div><h3>Проверь доступ к lovable.dev заранее</h3><p>Зарегистрируйся и убедись, что всё работает до начала хакатона.</p></div>
+      <div class="ru"><div class="ru-n">02</div><h3>Идеи — в таблицу</h3><p>Запиши свою идею в общую таблицу, чтобы все видели над чем ты работаешь.</p></div>
+      <div class="ru"><div class="ru-n">03</div><h3>Демо с видео — в Топик</h3><p>Запиши демо и выложи видео в топик чата. Каждый проект остаётся в истории.</p></div>
+    </div>
+  </div>
+  <div class="rules-block">
+    <div class="rules-block-header rules-block-header--notok">Не ок</div>
+    <div class="rg rg--list">
+      <div class="ru ru--notok"><div class="ru-n">!</div><h3>Тусить / отвлекать, не вайбкодя</h3><p>Исключение — эксперт для custdev или помощь с конкретной функцией.</p></div>
+    </div>
+  </div>
+  <div class="rules-block">
+    <div class="rules-block-header rules-block-header--rec">Рекомендуем</div>
+    <div class="rg rg--list">
+      <div class="ru ru--rec"><div class="ru-n">~</div><h3>Говорить промпт в микрофон</h3><p>Голосовой ввод ускоряет работу — попробуй диктовать вместо набора.</p></div>
+      <div class="ru ru--rec"><div class="ru-n">></div><h3>Начинать с lovable.dev</h3><p>Даже опытным разработчикам. Потом переходи в VS Code + Opus для тонкой настройки.</p></div>
+    </div>
+  </div>
 </div>
 </section>
 
-<!-- DEMO -->
+<!-- DEMO SECTION -->
 <section id="demos" class="demo-section">
 <div class="container">
-  <div class="demo-grid">
+  <div class="demo-grid reveal">
     <div>
       <div class="stag">// демо-день</div>
       <div class="stit">Каждый проект<br>остаётся в истории</div>
-      <p class="sdesc">В конце хакатона каждый участник записывает 3-минутное демо. Все видео собираются на платформе — никаких потерянных записей в чатах.</p>
+      <p class="sdesc">В конце хакатона каждый участник записывает 3-минутное демо. Все видео собираются в галерее — портфолио сообщества.</p>
       <div class="demo-features">
         <div class="demo-feat">
-          <div class="demo-feat-ic">🎥</div>
-          <div><h4>Запись экрана</h4><p>Показываешь свой проект и рассказываешь что сделал за день</p></div>
+          <div class="demo-feat-ic">~</div>
+          <div><h4>Запись экрана</h4><p>Встроенный рекордер прямо на сайте — запиши демо в один клик</p></div>
         </div>
         <div class="demo-feat">
-          <div class="demo-feat-ic">📤</div>
-          <div><h4>Загрузка в один клик</h4><p>Загружаешь видео через форму — оно автоматически попадает в архив</p></div>
+          <div class="demo-feat-ic">+</div>
+          <div><h4>Загрузка видео</h4><p>Вставь ссылку на YouTube, Loom или Google Drive</p></div>
         </div>
         <div class="demo-feat">
-          <div class="demo-feat-ic">🏆</div>
-          <div><h4>Портфолио сообщества</h4><p>Все демо доступны на сайте — показывай инвесторам и партнёрам</p></div>
+          <div class="demo-feat-ic">*</div>
+          <div><h4>Портфолио сообщества</h4><p>Все демо в галерее — показывай инвесторам и партнёрам</p></div>
         </div>
       </div>
     </div>
     <div class="demo-visual">
-      <div class="demo-icon">▶️</div>
+      <div class="demo-icon">&#9654;</div>
       <p>50+ демо-записей от участников хакатонов</p>
-      <div class="code-tag">Галерея скоро</div>
+      <div class="code-tag">v2.0 — Галерея + загрузка</div>
+    </div>
+  </div>
+
+  <!-- DEMO UPLOAD -->
+  <div class="demo-upload reveal">
+    <div class="stag">// загрузить демо</div>
+    <div class="stit" style="font-size:clamp(24px,3vw,36px)">Отправить своё демо</div>
+    <p class="sdesc">Запиши экран или вставь ссылку на видео — оно автоматически появится в галерее.</p>
+
+    <div class="demo-upload-grid">
+      <!-- Screen Recorder -->
+      <div class="recorder-card" id="recorderCard">
+        <div class="rec-icon">&#9679;</div>
+        <h3>Записать экран</h3>
+        <p class="rc-sub">Запись экрана прямо в браузере. Скачай и загрузи на YouTube.</p>
+        <div class="rec-timer" id="recTimer">00:00</div>
+        <div class="rec-controls">
+          <button class="rec-btn rec-btn--start" id="recStart">Начать запись</button>
+          <button class="rec-btn rec-btn--stop" id="recStop" disabled>Остановить</button>
+        </div>
+        <div class="rec-preview" id="recPreview">
+          <video id="recVideo" controls></video>
+        </div>
+        <div class="rec-controls" style="margin-top:10px">
+          <button class="rec-btn rec-btn--download" id="recDownload" disabled>Скачать видео</button>
+        </div>
+        <p class="rec-hint">После скачивания загрузи видео на YouTube и вставь ссылку в форму справа</p>
+      </div>
+
+      <!-- Video Link Upload Form -->
+      <div class="upload-card">
+        <h3>Отправить ссылку</h3>
+        <p class="uc-sub">Вставь ссылку на YouTube, Loom, Vimeo или Google Drive</p>
+        <div id="demoFormView">
+          <div class="fd">
+            <label>Имя <span class="rq">*</span></label>
+            <input type="text" id="demoName" placeholder="Как тебя зовут?" autocomplete="name">
+            <div class="em" id="demoNameErr">Укажи имя</div>
+          </div>
+          <div class="fd">
+            <label>Название проекта <span class="rq">*</span></label>
+            <input type="text" id="demoProject" placeholder="Например: AI-ассистент для юристов">
+            <div class="em" id="demoProjectErr">Укажи название проекта</div>
+          </div>
+          <div class="fd">
+            <label>Ссылка на видео <span class="rq">*</span></label>
+            <input type="url" id="demoUrl" placeholder="https://youtube.com/watch?v=...">
+            <div class="em" id="demoUrlErr">Вставь ссылку на видео</div>
+            <div class="ht">YouTube, Loom, Vimeo или Google Drive</div>
+          </div>
+          <div class="fd">
+            <label>Описание проекта</label>
+            <textarea id="demoDesc" placeholder="Коротко расскажи что делает проект и какую проблему решает"></textarea>
+          </div>
+          <div class="fd">
+            <label>Событие</label>
+            <select id="demoEvent">
+              <option value="">Выбери из списка</option>
+              <option>1 мар — Хакатон: Копируем SaaS</option>
+              <option>8 мар — Хакатон: AI-агенты</option>
+              <option>12 мар — Воркшоп: Vibe Coding</option>
+              <option>Другое</option>
+            </select>
+          </div>
+          <button class="sb" id="demoSubmit" onclick="submitDemo()">
+            <span class="bt">Отправить демо</span>
+            <span class="sp"></span>
+          </button>
+        </div>
+        <div class="ok" id="demoOk">
+          <div class="ok-r">&#10003;</div>
+          <h3>Демо отправлено!</h3>
+          <p>Видео появится в галерее. Спасибо за участие!</p>
+          <button class="sb" onclick="resetDemoForm()" style="margin-top:16px"><span class="bt">Отправить ещё</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEMO GALLERY -->
+  <div class="demo-gallery reveal">
+    <div class="stag" style="margin-top:16px">// галерея</div>
+    <div class="stit" style="font-size:clamp(24px,3vw,36px)">Демо участников</div>
+    <p class="sdesc">Проекты, созданные на наших хакатонах</p>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-empty">
+        <div class="ge-icon">&#9881;</div>
+        <p>Демо загружаются...</p>
+      </div>
     </div>
   </div>
 </div>
 </section>
 
 <!-- LOCATION -->
-<section id="location">
+<section id="location" class="reveal">
 <div class="container">
   <div class="stag">// локация</div>
   <div class="stit">Где встречаемся</div>
@@ -394,67 +538,613 @@ footer .container{display:flex;align-items:center;justify-content:space-between;
   <div class="lc">
     <div class="lc-photo">
       <img src="photo-hackathon.png" alt="ЗилАрт Еда — Зимний сад">
-      <div class="photo-badge">🌿 Зимний сад</div>
+      <div class="photo-badge">Зимний сад</div>
     </div>
     <div class="lc-i">
       <h3>ЗилАрт Еда · Зимний сад</h3>
       <p class="lc-a">Москва, бульвар Братьев Весниных, 2<br>ТЦ «ЗУМ», 1 этаж · Фудмолл</p>
       <div class="lc-fs">
-        <div class="lc-f"><span class="ic">🚇</span>Метро ЗИЛ — 10 мин пешком</div>
-        <div class="lc-f"><span class="ic">☕</span>Кофе и еда прямо на месте</div>
-        <div class="lc-f"><span class="ic">📶</span>Wi-Fi, розетки</div>
-        <div class="lc-f"><span class="ic">💻</span>Онлайн через Zoom</div>
+        <div class="lc-f"><span class="ic">M</span>Метро ЗИЛ — 10 мин пешком</div>
+        <div class="lc-f"><span class="ic">~</span>Кофе и еда прямо на месте</div>
+        <div class="lc-f"><span class="ic">W</span>Wi-Fi, розетки</div>
+        <div class="lc-f"><span class="ic">Z</span>Онлайн через Zoom</div>
       </div>
-      <a href="https://yandex.ru/maps/org/zilart_yeda/29536581631/" target="_blank" class="lc-l">Открыть в Яндекс Картах →</a>
+      <a href="https://yandex.ru/maps/org/zilart_yeda/29536581631/" target="_blank" class="lc-l">Открыть в Яндекс Картах</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="reveal">
+<div class="container">
+  <div class="stag">// вопросы</div>
+  <div class="stit">FAQ</div>
+  <p class="sdesc">Ответы на частые вопросы</p>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q">Нужен ли опыт программирования?<span class="faq-arrow">&#9660;</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Нет! Мы используем no-code/low-code инструменты вроде lovable.dev. Главное — идея и желание сделать продукт. Многие участники пишут свой первый код прямо на хакатоне.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Сколько стоит участие?<span class="faq-arrow">&#9660;</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Участие бесплатное. Мы стараемся сделать AI-хакатоны доступными для всех. Единственные расходы — еда и напитки на месте (фудмолл ЗилАрт).</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Можно ли участвовать онлайн?<span class="faq-arrow">&#9660;</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Да! Часть событий проходит в гибридном формате — можно подключиться через Zoom. Онлайн-воркшопы проводятся полностью удалённо. Смотри формат в расписании.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Что нужно взять с собой?<span class="faq-arrow">&#9660;</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Ноутбук с зарядкой — это всё. Wi-Fi и розетки есть на месте. Рекомендуем заранее зарегистрироваться на lovable.dev и проверить что всё работает.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Как загрузить демо своего проекта?<span class="faq-arrow">&#9660;</span></button>
+      <div class="faq-a"><div class="faq-a-inner">Используй встроенный рекордер на сайте (секция «Демо») для записи экрана, затем загрузи видео на YouTube и вставь ссылку в форму. Или просто вставь ссылку на уже записанное видео (YouTube, Loom, Google Drive).</div></div>
     </div>
   </div>
 </div>
 </section>
 
 <!-- REGISTER -->
-<section id="register">
+<section id="register" class="reveal">
 <div class="container">
   <div class="fl">
     <div style="text-align:center;margin-bottom:40px">
       <div class="stag" style="display:flex;justify-content:center">// регистрация</div>
       <div class="stit">Занять место</div>
-      <p style="color:var(--g500);font-size:15px">Напишем в Telegram с адресом и деталями</p>
+      <p style="color:var(--g500);font-size:15px">Данные попадают в таблицу — напишем в Telegram с деталями</p>
     </div>
     <div class="fb">
       <div id="fv">
         <div class="fd"><label>Имя <span class="rq">*</span></label><input type="text" id="fn" placeholder="Как тебя зовут?" autocomplete="name"><div class="em" id="en">Укажи имя</div></div>
         <div class="fd"><label>Telegram <span class="rq">*</span></label><div class="tw"><input type="text" id="ft" placeholder="username" autocomplete="off"></div><div class="em" id="et">Укажи Telegram</div></div>
-        <div class="fd"><label>Событие</label><select id="fe"><option value="">Выбери из списка</option><option>22 фев — Хакатон: AI-автоматизация</option><option>26 фев — Воркшоп: Vibe Coding</option><option>1 мар — Хакатон: Копируем SaaS</option><option>Любое ближайшее</option></select></div>
+        <div class="fd"><label>Email</label><input type="email" id="femail" placeholder="email@example.com" autocomplete="email"><div class="ht">Для подтверждения регистрации</div></div>
+        <div class="fd"><label>Событие</label><select id="fe"><option value="">Выбери из списка</option><option>1 мар — Хакатон: Копируем SaaS</option><option>8 мар — Хакатон: AI-агенты</option><option>12 мар — Воркшоп: Vibe Coding</option><option>Любое ближайшее</option></select></div>
+        <div class="fd"><label>Опыт</label><select id="fexp"><option value="">Какой у тебя опыт?</option><option>Совсем новичок — никогда не кодил</option><option>Использую ChatGPT / no-code</option><option>Немного программирую</option><option>Опытный разработчик</option></select></div>
         <div class="fd"><label>Идея на хакатон</label><textarea id="fi" placeholder="Что хочешь построить?"></textarea><div class="ht">Не обязательно — определишься на месте</div></div>
-        <button class="sb" id="sb" onclick="go()"><span class="bt">Записаться</span><div class="sp"></div></button>
+        <button class="sb" id="sb" onclick="submitRegistration()"><span class="bt">Записаться</span><span class="sp"></span></button>
       </div>
       <div class="ok" id="ov">
-        <div class="ok-r">✓</div>
+        <div class="ok-r">&#10003;</div>
         <h3>Готово!</h3>
-        <p>Напишем в Telegram за день до события с адресом и деталями.</p>
+        <p>Данные записаны в таблицу. Напишем в Telegram за день до события с адресом и деталями.</p>
         <div class="ri" id="ri"></div>
+        <button class="sb" onclick="resetRegForm()" style="margin-top:16px"><span class="bt">Записать ещё кого-то</span></button>
       </div>
     </div>
   </div>
 </div>
 </section>
 
-<footer><div class="container"><div class="fc">© 2025 Модель Мира</div><div class="flinks"><a href="https://t.me/" target="_blank">Telegram</a><a href="#events">Расписание</a><a href="#register">Регистрация</a></div></div></footer>
+<footer><div class="container"><div class="fc">&copy; 2025–2026 Модель Мира</div><div class="flinks"><a href="https://t.me/" target="_blank">Telegram</a><a href="#events">Расписание</a><a href="#register">Регистрация</a></div></div></footer>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" aria-label="Наверх">&#8593;</button>
 
 <script>
-let r=JSON.parse(localStorage.getItem('wm_r')||'[]');
-function go(){
-const n=document.getElementById('fn').value.trim(),t=document.getElementById('ft').value.trim().replace('@',''),e=document.getElementById('fe').value,i=document.getElementById('fi').value.trim(),b=document.getElementById('sb');
-document.querySelectorAll('.er').forEach(x=>x.classList.remove('er'));document.querySelectorAll('.em').forEach(x=>x.style.display='none');
-let bad=0;
-if(!n){document.getElementById('fn').classList.add('er');document.getElementById('en').style.display='block';bad=1}
-if(!t){document.getElementById('ft').classList.add('er');document.getElementById('et').style.display='block';bad=1}
-if(bad)return;
-b.classList.add('ld');b.disabled=true;
-setTimeout(()=>{r.push({name:n,tg:'@'+t,event:e||'-',idea:i||'-',ts:new Date().toISOString()});localStorage.setItem('wm_r',JSON.stringify(r));document.getElementById('fv').style.display='none';document.getElementById('ov').classList.add('sh');document.getElementById('ri').textContent='Участник #'+r.length;b.classList.remove('ld');b.disabled=false},900)
+// ============================================================
+//  КОНФИГУРАЦИЯ
+// ============================================================
+// Вставь сюда URL своего Google Apps Script (см. apps-script.gs)
+const APPS_SCRIPT_URL = '';
+
+// Ближайшие события для countdown (формат: [дата, название])
+const EVENTS = [
+  [new Date('2026-03-01T11:00:00+03:00'), 'Хакатон: Копируем SaaS'],
+  [new Date('2026-03-08T11:00:00+03:00'), 'Хакатон: AI-агенты'],
+  [new Date('2026-03-12T19:00:00+03:00'), 'Воркшоп: Vibe Coding'],
+];
+
+// ============================================================
+//  TOAST УВЕДОМЛЕНИЯ
+// ============================================================
+function showToast(msg, type) {
+  type = type || 'info';
+  var container = document.getElementById('toasts');
+  var toast = document.createElement('div');
+  toast.className = 'toast toast--' + type;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(function() {
+    toast.classList.add('out');
+    setTimeout(function() { toast.remove(); }, 300);
+  }, 4000);
 }
-document.querySelectorAll('input,textarea').forEach(el=>{el.addEventListener('input',()=>{el.classList.remove('er');const m=el.closest('.fd')?.querySelector('.em');if(m)m.style.display='none'})});
-document.querySelectorAll('input').forEach(el=>{el.addEventListener('keydown',e=>{if(e.key==='Enter')go()})});
+
+// ============================================================
+//  ОТПРАВКА ДАННЫХ В GOOGLE SHEETS
+// ============================================================
+function sendToSheet(data) {
+  // Если URL не настроен — сохраняем локально
+  if (!APPS_SCRIPT_URL) {
+    return new Promise(function(resolve) {
+      var key = data.type === 'demo' ? 'wm_demos' : 'wm_r';
+      var arr = JSON.parse(localStorage.getItem(key) || '[]');
+      arr.push(Object.assign({}, data, { ts: new Date().toISOString() }));
+      localStorage.setItem(key, JSON.stringify(arr));
+      setTimeout(function() {
+        resolve({ status: 'success', number: arr.length, local: true });
+      }, 800);
+    });
+  }
+
+  return fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  })
+  .then(function(r) { return r.json(); })
+  .catch(function(err) {
+    // Fallback: сохраняем локально при ошибке сети
+    var key = data.type === 'demo' ? 'wm_demos' : 'wm_r';
+    var arr = JSON.parse(localStorage.getItem(key) || '[]');
+    arr.push(Object.assign({}, data, { ts: new Date().toISOString() }));
+    localStorage.setItem(key, JSON.stringify(arr));
+    return { status: 'success', number: arr.length, local: true, offline: true };
+  });
+}
+
+// ============================================================
+//  РЕГИСТРАЦИЯ
+// ============================================================
+function submitRegistration() {
+  var name = document.getElementById('fn').value.trim();
+  var tg = document.getElementById('ft').value.trim().replace('@', '');
+  var email = document.getElementById('femail').value.trim();
+  var event = document.getElementById('fe').value;
+  var exp = document.getElementById('fexp').value;
+  var idea = document.getElementById('fi').value.trim();
+  var btn = document.getElementById('sb');
+
+  // Сброс ошибок
+  document.querySelectorAll('#fv .er').forEach(function(x) { x.classList.remove('er'); });
+  document.querySelectorAll('#fv .em').forEach(function(x) { x.style.display = 'none'; });
+
+  var bad = 0;
+  if (!name) { document.getElementById('fn').classList.add('er'); document.getElementById('en').style.display = 'block'; bad = 1; }
+  if (!tg) { document.getElementById('ft').classList.add('er'); document.getElementById('et').style.display = 'block'; bad = 1; }
+  if (bad) return;
+
+  btn.classList.add('ld');
+  btn.disabled = true;
+
+  sendToSheet({
+    type: 'registration',
+    name: name,
+    telegram: tg,
+    email: email,
+    event: event || '-',
+    idea: idea || '-',
+    experience: exp || '-'
+  }).then(function(res) {
+    document.getElementById('fv').style.display = 'none';
+    document.getElementById('ov').classList.add('sh');
+    document.getElementById('ri').textContent = 'Участник #' + (res.number || '?');
+    btn.classList.remove('ld');
+    btn.disabled = false;
+
+    if (res.local) {
+      showToast('Сохранено локально (Google Sheets не настроен)', 'info');
+    } else {
+      showToast('Регистрация записана в таблицу!', 'success');
+    }
+  }).catch(function() {
+    btn.classList.remove('ld');
+    btn.disabled = false;
+    showToast('Ошибка при отправке. Попробуй ещё раз', 'error');
+  });
+}
+
+function resetRegForm() {
+  document.getElementById('ov').classList.remove('sh');
+  document.getElementById('fv').style.display = '';
+  document.getElementById('fn').value = '';
+  document.getElementById('ft').value = '';
+  document.getElementById('femail').value = '';
+  document.getElementById('fe').value = '';
+  document.getElementById('fexp').value = '';
+  document.getElementById('fi').value = '';
+}
+
+// ============================================================
+//  ОТПРАВКА ДЕМО
+// ============================================================
+function submitDemo() {
+  var name = document.getElementById('demoName').value.trim();
+  var project = document.getElementById('demoProject').value.trim();
+  var url = document.getElementById('demoUrl').value.trim();
+  var desc = document.getElementById('demoDesc').value.trim();
+  var event = document.getElementById('demoEvent').value;
+  var btn = document.getElementById('demoSubmit');
+
+  // Сброс ошибок
+  document.querySelectorAll('#demoFormView .er').forEach(function(x) { x.classList.remove('er'); });
+  document.querySelectorAll('#demoFormView .em').forEach(function(x) { x.style.display = 'none'; });
+
+  var bad = 0;
+  if (!name) { document.getElementById('demoName').classList.add('er'); document.getElementById('demoNameErr').style.display = 'block'; bad = 1; }
+  if (!project) { document.getElementById('demoProject').classList.add('er'); document.getElementById('demoProjectErr').style.display = 'block'; bad = 1; }
+  if (!url) { document.getElementById('demoUrl').classList.add('er'); document.getElementById('demoUrlErr').style.display = 'block'; bad = 1; }
+  if (bad) return;
+
+  btn.classList.add('ld');
+  btn.disabled = true;
+
+  sendToSheet({
+    type: 'demo',
+    name: name,
+    project: project,
+    videoUrl: url,
+    description: desc || '-',
+    event: event || '-'
+  }).then(function(res) {
+    document.getElementById('demoFormView').style.display = 'none';
+    document.getElementById('demoOk').classList.add('sh');
+    btn.classList.remove('ld');
+    btn.disabled = false;
+
+    if (res.local) {
+      showToast('Демо сохранено локально', 'info');
+    } else {
+      showToast('Демо загружено в галерею!', 'success');
+    }
+
+    // Обновляем галерею
+    loadDemoGallery();
+  }).catch(function() {
+    btn.classList.remove('ld');
+    btn.disabled = false;
+    showToast('Ошибка при отправке демо. Попробуй ещё раз', 'error');
+  });
+}
+
+function resetDemoForm() {
+  document.getElementById('demoOk').classList.remove('sh');
+  document.getElementById('demoFormView').style.display = '';
+  document.getElementById('demoName').value = '';
+  document.getElementById('demoProject').value = '';
+  document.getElementById('demoUrl').value = '';
+  document.getElementById('demoDesc').value = '';
+  document.getElementById('demoEvent').value = '';
+}
+
+// ============================================================
+//  ЗАГРУЗКА ГАЛЕРЕИ ДЕМО
+// ============================================================
+function getYouTubeId(url) {
+  var match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+function getLoomId(url) {
+  var match = url.match(/loom\.com\/share\/([a-zA-Z0-9]+)/);
+  return match ? match[1] : null;
+}
+
+function renderGallery(demos) {
+  var grid = document.getElementById('galleryGrid');
+
+  if (!demos || demos.length === 0) {
+    grid.innerHTML = '<div class="gallery-empty"><div class="ge-icon">&#127916;</div><p>Пока нет демо. Будь первым — загрузи своё!</p></div>';
+    return;
+  }
+
+  grid.innerHTML = '';
+  demos.forEach(function(demo) {
+    var card = document.createElement('div');
+    card.className = 'gallery-card';
+
+    var thumbHtml = '';
+    var ytId = getYouTubeId(demo.videoUrl || '');
+    var loomId = getLoomId(demo.videoUrl || '');
+
+    if (ytId) {
+      thumbHtml = '<iframe src="https://www.youtube.com/embed/' + ytId + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>';
+    } else if (loomId) {
+      thumbHtml = '<iframe src="https://www.loom.com/embed/' + loomId + '" allowfullscreen loading="lazy"></iframe>';
+    } else {
+      thumbHtml = '<div class="thumb-placeholder">&#9654;</div>';
+    }
+
+    card.innerHTML =
+      '<div class="gallery-thumb">' + thumbHtml + '</div>' +
+      '<div class="gallery-info">' +
+        '<h4>' + escapeHtml(demo.project || 'Проект') + '</h4>' +
+        '<div class="gi-author">' + escapeHtml(demo.name || 'Участник') + '</div>' +
+        '<div class="gi-desc">' + escapeHtml(demo.description || '') + '</div>' +
+        (demo.event ? '<div class="gi-event">' + escapeHtml(demo.event) + '</div>' : '') +
+      '</div>';
+
+    grid.appendChild(card);
+  });
+}
+
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function loadDemoGallery() {
+  // Из Google Sheets
+  if (APPS_SCRIPT_URL) {
+    fetch(APPS_SCRIPT_URL + '?action=getDemos')
+      .then(function(r) { return r.json(); })
+      .then(function(data) { renderGallery(data.demos || []); })
+      .catch(function() { loadLocalDemos(); });
+  } else {
+    loadLocalDemos();
+  }
+}
+
+function loadLocalDemos() {
+  var demos = JSON.parse(localStorage.getItem('wm_demos') || '[]');
+  renderGallery(demos.slice().reverse());
+}
+
+// ============================================================
+//  РЕКОРДЕР ЭКРАНА
+// ============================================================
+var mediaRecorder = null;
+var recordedChunks = [];
+var recordedBlob = null;
+var recStartTime = 0;
+var recInterval = null;
+
+var prevPreviewUrl = null;
+
+document.getElementById('recStart').addEventListener('click', function() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+    showToast('Браузер не поддерживает запись экрана', 'error');
+    return;
+  }
+
+  navigator.mediaDevices.getDisplayMedia({
+    video: { mediaSource: 'screen' },
+    audio: true
+  }).then(function(stream) {
+    try {
+      recordedChunks = [];
+      recordedBlob = null;
+
+      // Очистка предыдущего превью
+      if (prevPreviewUrl) {
+        URL.revokeObjectURL(prevPreviewUrl);
+        prevPreviewUrl = null;
+      }
+
+      // Определяем поддерживаемый mimeType
+      var mimeType = 'video/webm';
+      if (typeof MediaRecorder !== 'undefined' && !MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = '';
+      }
+      mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType: mimeType } : undefined);
+
+      var recMimeType = mediaRecorder.mimeType || 'video/webm';
+
+      mediaRecorder.ondataavailable = function(e) {
+        if (e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = function() {
+        recordedBlob = new Blob(recordedChunks, { type: recMimeType });
+        prevPreviewUrl = URL.createObjectURL(recordedBlob);
+        var video = document.getElementById('recVideo');
+        video.src = prevPreviewUrl;
+        document.getElementById('recPreview').style.display = 'block';
+        document.getElementById('recDownload').disabled = false;
+        document.getElementById('recorderCard').classList.remove('recording');
+        clearInterval(recInterval);
+
+        // Остановить все треки
+        stream.getTracks().forEach(function(track) { track.stop(); });
+      };
+
+      mediaRecorder.start();
+
+      document.getElementById('recStart').disabled = true;
+      document.getElementById('recStop').disabled = false;
+      document.getElementById('recorderCard').classList.add('recording');
+
+      // Сброс и старт таймера
+      recStartTime = Date.now();
+      var timerEl = document.getElementById('recTimer');
+      timerEl.textContent = '00:00';
+      timerEl.classList.add('active');
+      if (recInterval) clearInterval(recInterval);
+      recInterval = setInterval(function() {
+        var elapsed = Math.floor((Date.now() - recStartTime) / 1000);
+        var mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        var ss = String(elapsed % 60).padStart(2, '0');
+        timerEl.textContent = mm + ':' + ss;
+      }, 1000);
+
+      showToast('Запись началась', 'success');
+
+      // Если пользователь останавливает шаринг через UI браузера
+      stream.getVideoTracks()[0].onended = function() {
+        if (mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      };
+    } catch (err) {
+      stream.getTracks().forEach(function(track) { track.stop(); });
+      showToast('Ошибка записи: ' + err.message, 'error');
+      document.getElementById('recStart').disabled = false;
+      document.getElementById('recStop').disabled = true;
+    }
+  }).catch(function(err) {
+    if (err.name !== 'NotAllowedError') {
+      showToast('Ошибка записи: ' + err.message, 'error');
+    }
+  });
+});
+
+document.getElementById('recStop').addEventListener('click', function() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+  }
+  document.getElementById('recStart').disabled = false;
+  document.getElementById('recStop').disabled = true;
+});
+
+document.getElementById('recDownload').addEventListener('click', function() {
+  if (!recordedBlob) return;
+  var dlUrl = URL.createObjectURL(recordedBlob);
+  var ext = recordedBlob.type.includes('mp4') ? 'mp4' : 'webm';
+  var a = document.createElement('a');
+  a.href = dlUrl;
+  a.download = 'demo-' + new Date().toISOString().slice(0, 10) + '.' + ext;
+  a.click();
+  setTimeout(function() { URL.revokeObjectURL(dlUrl); }, 1000);
+  showToast('Видео скачано! Загрузи на YouTube и вставь ссылку', 'info');
+});
+
+// ============================================================
+//  COUNTDOWN
+// ============================================================
+var countdownInterval = null;
+function updateCountdown() {
+  var now = new Date();
+  var next = null;
+  var nextName = '';
+
+  for (var i = 0; i < EVENTS.length; i++) {
+    if (EVENTS[i][0] > now) {
+      next = EVENTS[i][0];
+      nextName = EVENTS[i][1];
+      break;
+    }
+  }
+
+  if (!next) {
+    document.getElementById('countdown').style.display = 'none';
+    if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    return;
+  }
+
+  document.getElementById('countdown').style.display = '';
+  var diff = next - now;
+  var d = Math.floor(diff / 86400000);
+  var h = Math.floor((diff % 86400000) / 3600000);
+  var m = Math.floor((diff % 3600000) / 60000);
+  var s = Math.floor((diff % 60000) / 1000);
+
+  document.getElementById('cd-d').textContent = String(d).padStart(2, '0');
+  document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
+  document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
+  document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
+  document.getElementById('cd-event').textContent = nextName;
+}
+updateCountdown();
+countdownInterval = setInterval(updateCountdown, 1000);
+
+// ============================================================
+//  SCROLL ANIMATIONS
+// ============================================================
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(function(el) {
+  observer.observe(el);
+});
+
+// ============================================================
+//  HEADER SCROLL EFFECT
+// ============================================================
+window.addEventListener('scroll', function() {
+  var header = document.querySelector('header');
+  var btt = document.getElementById('backToTop');
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+  if (window.scrollY > 400) {
+    btt.classList.add('visible');
+  } else {
+    btt.classList.remove('visible');
+  }
+});
+
+// ============================================================
+//  BACK TO TOP
+// ============================================================
+document.getElementById('backToTop').addEventListener('click', function() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ============================================================
+//  MOBILE MENU
+// ============================================================
+var burger = document.getElementById('burger');
+var nav = document.getElementById('nav');
+burger.addEventListener('click', function() {
+  burger.classList.toggle('open');
+  nav.classList.toggle('open');
+});
+nav.querySelectorAll('a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    burger.classList.remove('open');
+    nav.classList.remove('open');
+  });
+});
+
+// ============================================================
+//  FAQ ACCORDION
+// ============================================================
+document.querySelectorAll('.faq-q').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item = btn.parentElement;
+    var answer = item.querySelector('.faq-a');
+    var isOpen = item.classList.contains('open');
+
+    // Закрыть все
+    document.querySelectorAll('.faq-item').forEach(function(fi) {
+      fi.classList.remove('open');
+      fi.querySelector('.faq-a').style.maxHeight = null;
+    });
+
+    // Открыть текущий
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+});
+
+// ============================================================
+//  FORM INPUT HANDLERS
+// ============================================================
+document.querySelectorAll('input,textarea').forEach(function(el) {
+  el.addEventListener('input', function() {
+    el.classList.remove('er');
+    var m = el.closest('.fd');
+    if (m) {
+      var em = m.querySelector('.em');
+      if (em) em.style.display = 'none';
+    }
+  });
+});
+document.querySelectorAll('#fv input').forEach(function(el) {
+  el.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') submitRegistration();
+  });
+});
+document.querySelectorAll('#demoFormView input').forEach(function(el) {
+  el.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') submitDemo();
+  });
+});
+
+// ============================================================
+//  INIT
+// ============================================================
+loadDemoGallery();
 </script>
 </body>
 </html>
